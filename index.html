@@ -2038,7 +2038,72 @@ function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
 // SERVICE WORKER
 // ===========================
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(() => {});
+  navigator.serviceWorker.register('./sw.js', { scope: './' }).then(reg => {
+    // Check for updates every time the page loads
+    reg.update();
+
+    // New SW is waiting (update downloaded) — prompt user
+    if (reg.waiting) {
+      showUpdatePrompt(reg.waiting);
+    }
+
+    // Fires when a new SW finishes installing and is waiting to activate
+    reg.addEventListener('updatefound', () => {
+      const newSW = reg.installing;
+      newSW.addEventListener('statechange', () => {
+        if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
+          showUpdatePrompt(newSW);
+        }
+      });
+    });
+  }).catch(() => {});
+
+  // When the new SW takes control, reload the page to get fresh assets
+  let refreshing = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!refreshing) { refreshing = true; window.location.reload(); }
+  });
+}
+
+function showUpdatePrompt(sw) {
+  // Inject a banner at the top of the page
+  const existing = document.getElementById('update-banner');
+  if (existing) return;
+
+  const banner = document.createElement('div');
+  banner.id = 'update-banner';
+  banner.style.cssText = `
+    position: fixed; top: 56px; left: 0; right: 0; z-index: 999;
+    background: #1f1109; border-bottom: 1px solid #c4952a;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 20px; gap: 12px; font-family: 'Inconsolata', monospace;
+    font-size: 11px; letter-spacing: 0.08em; color: #e8dcc8;
+  `;
+  banner.innerHTML = `
+    <span>⟳ &nbsp;A new version of Cave is available</span>
+    <div style="display:flex;gap:8px">
+      <button onclick="document.getElementById('update-banner').remove()" style="
+        background:none;border:1px solid #4a3020;color:#8a7060;padding:4px 10px;
+        font-family:inherit;font-size:10px;letter-spacing:0.1em;cursor:pointer;border-radius:2px;
+      ">Later</button>
+      <button onclick="applyUpdate()" id="update-apply-btn" style="
+        background:none;border:1px solid #c4952a;color:#c4952a;padding:4px 10px;
+        font-family:inherit;font-size:10px;letter-spacing:0.1em;cursor:pointer;border-radius:2px;
+      ">Update Now</button>
+    </div>
+  `;
+  document.body.appendChild(banner);
+
+  // Store reference to the waiting SW so we can activate it on click
+  window._pendingSW = sw;
+}
+
+function applyUpdate() {
+  const btn = document.getElementById('update-apply-btn');
+  if (btn) btn.textContent = 'Updating…';
+  if (window._pendingSW) {
+    window._pendingSW.postMessage({ type: 'SKIP_WAITING' });
+  }
 }
 
 // ===========================

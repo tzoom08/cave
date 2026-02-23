@@ -1573,13 +1573,13 @@ async function handleLabelPhoto(input) {
   const file = input.files[0];
   if (!file) return;
 
-  // Show preview
+  // Show preview immediately
   const preview = document.getElementById('label-preview');
   const reader = new FileReader();
   reader.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; };
   reader.readAsDataURL(file);
 
-  // Update UI
+  // Update UI state
   const area = document.getElementById('scan-area');
   const iconEl = document.getElementById('scan-icon-el');
   const hintEl = document.getElementById('scan-hint-el');
@@ -1590,226 +1590,140 @@ async function handleLabelPhoto(input) {
   area.classList.add('processing');
   iconEl.style.display = 'none';
   progressEl.classList.add('visible');
-  statusEl.textContent = 'Loading OCR engine…';
-  barEl.style.width = '10%';
+  statusEl.textContent = 'Reading label…';
+  barEl.style.width = '20%';
 
   try {
-    // Load Tesseract from CDN
-    if (!window.Tesseract) {
-      await loadScript('https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.0.4/tesseract.min.js');
+    if (!navigator.onLine) {
+      throw new Error('offline');
     }
 
-    statusEl.textContent = 'Reading label text…';
-    barEl.style.width = '30%';
-
-    // Pre-process image for better OCR: scale up, increase contrast
-    const img = new Image();
-    await new Promise(res => { img.onload = res; img.src = URL.createObjectURL(file); });
-    const canvas = document.createElement('canvas');
-    const scale = Math.min(3, 1800 / Math.max(img.width, img.height));
-    canvas.width = img.width * scale;
-    canvas.height = img.height * scale;
-    const ctx = canvas.getContext('2d');
-    ctx.filter = 'contrast(1.4) brightness(1.05)';
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    const imageData = canvas.toDataURL('image/png');
+    // Resize image to keep under ~1MB for API
+    const base64 = await resizeImageToBase64(file, 1200);
+    const mimeType = 'image/jpeg';
 
     barEl.style.width = '50%';
+    statusEl.textContent = 'Identifying wine…';
 
-    const result = await Tesseract.recognize(imageData, 'eng', {
-      logger: m => {
-        if (m.status === 'recognizing text') {
-          barEl.style.width = (50 + m.progress * 35) + '%';
-        }
-      }
+    // Call Claude vision API
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 500,
+        messages: [{
+          role: 'user',
+          content: [
+            {
+              type: 'image',
+              source: { type: 'base64', media_type: mimeType, data: base64 }
+            },
+            {
+              type: 'text',
+              text: `You are a wine expert reading a bottle label. Extract the following details from this wine label image and return ONLY a valid JSON object with no other text, markdown, or explanation.
+
+Return this exact structure (use null for any field you cannot confidently read):
+{
+  "name": "wine name or cuvée",
+  "producer": "producer or winery name",
+  "vintage": 2019,
+  "varietal": "grape variety or blend",
+  "type": "red|white|rosé|sparkling|orange|dessert|fortified",
+  "region": "appellation or region",
+  "country": "country of origin",
+  "notes": "any interesting details from the label such as DOC/DOCG classification, alcohol %, awards"
+}`
+            }
+          ]
+        }]
+      })
     });
 
-    barEl.style.width = '88%';
-    statusEl.textContent = 'Parsing wine details…';
+    barEl.style.width = '85%';
 
-    const rawText = result.data.text;
-    const parsed = parseLabelText(rawText);
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error?.message || 'API error');
+    }
+
+    const text = data.content?.[0]?.text || '';
+    // Strip any accidental markdown fences
+    const clean = text.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
 
     barEl.style.width = '100%';
 
-    // Populate form
+    // Populate form fields
     let filled = 0;
-    if (parsed.name)     { document.getElementById('f-name').value = parsed.name; filled++; }
-    if (parsed.producer) { document.getElementById('f-producer').value = parsed.producer; filled++; }
-    if (parsed.vintage)  { document.getElementById('f-vintage').value = parsed.vintage; filled++; }
-    if (parsed.varietal) { document.getElementById('f-varietal').value = parsed.varietal; filled++; }
-    if (parsed.region)   { document.getElementById('f-region').value = parsed.region; filled++; }
-    if (parsed.country)  { document.getElementById('f-country').value = parsed.country; filled++; }
-    if (parsed.type)     { document.getElementById('f-type').value = parsed.type; }
+    const fields = {
+      'f-name': parsed.name,
+      'f-producer': parsed.producer,
+      'f-vintage': parsed.vintage,
+      'f-varietal': parsed.varietal,
+      'f-region': parsed.region,
+      'f-country': parsed.country,
+      'f-notes': parsed.notes
+    };
+    for (const [id, val] of Object.entries(fields)) {
+      if (val != null && String(val).trim()) {
+        document.getElementById(id).value = String(val).trim();
+        filled++;
+      }
+    }
+    if (parsed.type) {
+      const typeEl = document.getElementById('f-type');
+      const validTypes = ['red','white','rosé','sparkling','orange','dessert','fortified'];
+      if (validTypes.includes(parsed.type)) typeEl.value = parsed.type;
+    }
 
     area.classList.remove('processing');
     area.classList.add('success');
-    hintEl.textContent = filled > 0 ? `${filled} field${filled > 1 ? 's' : ''} populated — tap to rescan` : 'Label read — check fields below';
-    hintEl.style.display = 'block';
     progressEl.classList.remove('visible');
+    hintEl.style.display = 'block';
+    hintEl.textContent = filled > 0
+      ? `${filled} field${filled > 1 ? 's' : ''} populated — tap to rescan`
+      : 'Label read — check fields below';
 
-    if (filled > 0) {
-      toast(`Label scanned — ${filled} field${filled > 1 ? 's' : ''} populated ✓`, 'success');
-      // If online and we have name, try to enrich from Open Food Facts
-      if (navigator.onLine && parsed.name) enrichFromSearch(parsed);
-    } else {
-      toast('Could not parse label — please fill in manually');
-    }
+    toast(`Label identified — ${filled} field${filled !== 1 ? 's' : ''} populated ✓`, 'success');
 
   } catch(e) {
     console.error(e);
     area.classList.remove('processing');
     progressEl.classList.remove('visible');
     hintEl.style.display = 'block';
-    hintEl.textContent = 'OCR failed — try again or enter manually';
-    toast('Could not read label', 'error');
+
+    if (e.message === 'offline') {
+      hintEl.textContent = 'Offline — label scan requires internet';
+      toast('Connect to the internet to scan labels', 'error');
+    } else {
+      hintEl.textContent = 'Could not read label — try again or enter manually';
+      toast('Label scan failed — try again', 'error');
+    }
   }
 
-  // Reset file input so same photo can be re-selected
   input.value = '';
 }
 
-function loadScript(src) {
+// Resize image and return base64-encoded JPEG string (no data: prefix)
+function resizeImageToBase64(file, maxDim) {
   return new Promise((resolve, reject) => {
-    if (document.querySelector(`script[src="${src}"]`)) { resolve(); return; }
-    const s = document.createElement('script');
-    s.src = src;
-    s.onload = resolve;
-    s.onerror = reject;
-    document.head.appendChild(s);
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.88);
+      resolve(dataUrl.split(',')[1]); // strip "data:image/jpeg;base64,"
+    };
+    img.onerror = reject;
+    img.src = url;
   });
-}
-
-function parseLabelText(text) {
-  const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 1);
-  const allText = lines.join(' ');
-  const result = {};
-
-  // VINTAGE — 4-digit year 1900–2030
-  const vintageMatch = allText.match(/\b(19[5-9]\d|20[0-2]\d)\b/);
-  if (vintageMatch) result.vintage = parseInt(vintageMatch[1]);
-
-  // ALCOHOL % — helps confirm it's a wine label
-  const alcoholMatch = allText.match(/(\d{1,2}\.?\d?)\s*%\s*(alc|vol|by vol)/i);
-
-  // KNOWN VARIETALS
-  const varietals = [
-    'Cabernet Sauvignon','Cabernet Franc','Sauvignon Blanc','Pinot Noir','Pinot Grigio','Pinot Gris',
-    'Chardonnay','Merlot','Syrah','Shiraz','Grenache','Malbec','Tempranillo','Zinfandel',
-    'Riesling','Gewurztraminer','Viognier','Chenin Blanc','Sangiovese','Nebbiolo','Barbera',
-    'Mourvedre','Roussanne','Marsanne','Gruner Veltliner','Torrontes','Carmenere','Petit Verdot',
-    'Petite Sirah','Gamay','Muscat','Moscato','Prosecco','Champagne','Cava','Sparkling',
-    'Montepulciano','Primitivo','Nero d\'Avola','Vermentino','Fiano','Greco'
-  ];
-  for (const v of varietals) {
-    if (new RegExp('\\b' + v + '\\b', 'i').test(allText)) {
-      result.varietal = v;
-      break;
-    }
-  }
-
-  // TYPE from varietal or keywords
-  const typeKeywords = {
-    red: ['rouge','red wine','red','rosso','tinto','rotwein'],
-    white: ['blanc','white wine','white','bianco','blanco','weisswein','weiss'],
-    'rosé': ['rosé','rose','rosato','rosat'],
-    sparkling: ['sparkling','champagne','cava','prosecco','cremant','crémant','sekt','frizzante','pétillant','pét-nat'],
-    dessert: ['sauternes','late harvest','eiswein','ice wine','botrytis','sweet'],
-    fortified: ['port','sherry','madeira','marsala','vermouth']
-  };
-  if (result.varietal) {
-    const lv = result.varietal.toLowerCase();
-    if (['prosecco','champagne','cava','sparkling'].includes(lv)) result.type = 'sparkling';
-    else if (['sauvignon blanc','chardonnay','pinot grigio','pinot gris','riesling','gewurztraminer','viognier','chenin blanc','gruner veltliner','torrontes','roussanne','marsanne','vermentino','fiano','greco','muscat','moscato'].includes(lv)) result.type = 'white';
-    else if (!result.type) result.type = 'red';
-  }
-  for (const [type, kws] of Object.entries(typeKeywords)) {
-    for (const kw of kws) {
-      if (allText.toLowerCase().includes(kw)) { result.type = type; break; }
-    }
-    if (result.type) break;
-  }
-
-  // KNOWN REGIONS / APPELLATIONS
-  const regions = [
-    'Bordeaux','Burgundy','Bourgogne','Champagne','Rhône','Alsace','Loire','Languedoc','Provence',
-    'Napa Valley','Sonoma','Willamette Valley','Paso Robles','Santa Barbara','Finger Lakes',
-    'Barossa Valley','McLaren Vale','Margaret River','Yarra Valley','Clare Valley','Eden Valley',
-    'Tuscany','Toscana','Piedmont','Piemonte','Veneto','Sicilia','Puglia',
-    'Rioja','Ribera del Duero','Priorat','Rias Baixas',
-    'Mendoza','Uco Valley','Maipo','Colchagua',
-    'Douro','Alentejo','Dao','Vinho Verde',
-    'Mosel','Rheingau','Pfalz','Baden',
-    'Marlborough','Central Otago','Hawke\'s Bay',
-    'Stellenbosch','Swartland','Franschhoek',
-    'Walla Walla','Columbia Valley','Yakima Valley',
-    'Châteauneuf-du-Pape','Côtes du Rhône','Saint-Émilion','Pomerol','Pauillac','Margaux',
-    'Gevrey-Chambertin','Meursault','Chablis','Beaujolais','Gigondas','Cairanne'
-  ];
-  for (const r of regions) {
-    if (new RegExp('\\b' + r.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i').test(allText)) {
-      result.region = r;
-      break;
-    }
-  }
-
-  // COUNTRY
-  const countries = {
-    'France': ['france','français','francais','vin de france'],
-    'Italy': ['italy','italia','italian'],
-    'Spain': ['spain','españa','espana','spanish'],
-    'USA': ['california','oregon','washington state','napa','sonoma','united states','usa'],
-    'Australia': ['australia','australian'],
-    'Argentina': ['argentina','argentine','argentinian','mendoza'],
-    'Chile': ['chile','chilean'],
-    'New Zealand': ['new zealand'],
-    'Portugal': ['portugal','portuguese'],
-    'Germany': ['germany','german','deutschland'],
-    'South Africa': ['south africa','stellenbosch','swartland'],
-    'Austria': ['austria','austrian','österreich']
-  };
-  for (const [country, kws] of Object.entries(countries)) {
-    for (const kw of kws) {
-      if (allText.toLowerCase().includes(kw)) { result.country = country; break; }
-    }
-    if (result.country) break;
-  }
-
-  // PRODUCER & NAME — heuristic: largest text lines near top are usually the producer/wine name
-  // Score lines by length and position; skip lines that are just numbers, % or generic words
-  const skipWords = /^(wine|vin|vino|winery|estate|château|chateau|domaine|bodega|cantina|weingut|product|imported|contains|sulfites|government|warning|alcohol|serve|store|best|enjoy|mis en|bottled|produce|appellation|controlée|contrôlée|denominacion|denominazione|qualitätswein|kabinett|spätlese|auslese|beerenauslese|trockenbeerenauslese|eiswein)$/i;
-  const goodLines = lines.filter(l => {
-    if (l.length < 3 || l.length > 60) return false;
-    if (/^\d+(\.\d+)?\s*(%|ml|cl|l|oz)$/i.test(l)) return false;
-    if (/^\d{4}$/.test(l)) return false; // year on its own — skip
-    const words = l.split(/\s+/);
-    if (words.length === 1 && skipWords.test(words[0])) return false;
-    return true;
-  });
-
-  // Best candidate lines: score by capitalization and length
-  const scored = goodLines.map(l => {
-    let score = 0;
-    if (/^[A-Z]/.test(l)) score += 2;
-    if (/^[A-Z\s]+$/.test(l)) score += 1; // ALL CAPS label lines
-    if (l.includes('Château') || l.includes('Domaine') || l.includes('Bodega') || l.includes('Weingut') || l.includes('Estate')) score += 3;
-    score += Math.min(l.length / 10, 3);
-    return { line: l, score };
-  }).sort((a, b) => b.score - a.score);
-
-  if (scored.length > 0) {
-    const top = scored[0].line;
-    // If it has producer keywords, assign to producer
-    if (/château|chateau|domaine|bodega|cantina|weingut|estate|winery|cellars?/i.test(top)) {
-      result.producer = top;
-      if (scored[1]) result.name = scored[1].line;
-    } else {
-      result.name = top;
-      if (scored[1] && scored[1].line !== top) result.producer = scored[1].line;
-    }
-  }
-
-  return result;
 }
 
 async function enrichFromSearch(parsed) {

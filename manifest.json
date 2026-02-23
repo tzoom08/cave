@@ -1,0 +1,18 @@
+{
+  "name": "Cave — Wine Cellar",
+  "short_name": "Cave",
+  "description": "Track your wine collection, cellar locations, and bottle details",
+  "start_url": "/cave/",
+  "scope": "/cave/",
+  "display": "standalone",
+  "background_color": "#0e0603",
+  "theme_color": "#1a0a00",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%230e0603'/%3E%3Ctext x='96' y='130' font-size='100' text-anchor='middle' fill='%23c4952a'%3E🍷%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    }
+  ]
+}

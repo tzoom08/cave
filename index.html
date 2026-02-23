@@ -378,22 +378,51 @@
     cursor: pointer;
     transition: all 0.2s;
     position: relative;
+    overflow: hidden;
   }
   #scan-area:hover { border-color: var(--gold); }
-  #scan-area.active { border-color: var(--wine-light); border-style: solid; }
+  #scan-area.processing { border-color: var(--gold); border-style: solid; pointer-events: none; }
+  #scan-area.success { border-color: var(--green); border-style: solid; }
 
-  #scanner-video {
+  #label-preview {
     width: 100%;
-    max-width: 400px;
-    height: 200px;
-    object-fit: cover;
+    max-width: 340px;
+    max-height: 260px;
+    object-fit: contain;
     display: none;
     border-radius: var(--radius);
-    margin: 10px auto;
+    margin: 12px auto 0;
+    border: 1px solid var(--border);
   }
 
   .scan-icon { font-size: 36px; color: var(--text-muted); margin-bottom: 10px; }
   .scan-hint { font-size: 10px; color: var(--text-muted); letter-spacing: 0.1em; }
+
+  .ocr-progress {
+    display: none;
+    margin-top: 14px;
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+  }
+  .ocr-progress.visible { display: block; }
+
+  .ocr-bar-track {
+    height: 2px;
+    background: var(--border);
+    border-radius: 1px;
+    margin-top: 8px;
+    overflow: hidden;
+  }
+  .ocr-bar-fill {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 1px;
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+
+  #file-input { display: none; }
 
   .or-divider {
     display: flex;
@@ -800,11 +829,17 @@
     </div>
 
     <!-- Scanner -->
-    <div id="scan-area" onclick="toggleScanner()">
-      <div class="scan-icon">📷</div>
-      <div class="scan-hint">TAP TO SCAN BARCODE</div>
-      <video id="scanner-video" autoplay muted playsinline></video>
-      <canvas id="scan-canvas" style="display:none"></canvas>
+    <!-- Hidden file input: capture=environment opens rear camera on iOS -->
+    <input type="file" id="file-input" accept="image/*" capture="environment" onchange="handleLabelPhoto(this)">
+
+    <div id="scan-area" onclick="document.getElementById('file-input').click()">
+      <div class="scan-icon" id="scan-icon-el">🍷</div>
+      <div class="scan-hint" id="scan-hint-el">TAP TO PHOTOGRAPH LABEL</div>
+      <img id="label-preview" alt="Label preview">
+      <div class="ocr-progress" id="ocr-progress">
+        <span id="ocr-status">Reading label…</span>
+        <div class="ocr-bar-track"><div class="ocr-bar-fill" id="ocr-bar"></div></div>
+      </div>
     </div>
 
     <div class="or-divider">or search manually</div>
@@ -1103,8 +1138,7 @@ let currentFilter = 'all';
 let currentSort = 'addedAt';
 let currentRackId = null;
 let currentBottleId = null;
-let scannerActive = false;
-let scannerStream = null;
+let ocrWorker = null;
 let searchDebounce = null;
 
 // ===========================
@@ -1531,84 +1565,269 @@ async function updatePendingCount() {
 // ===========================
 // BARCODE SCANNER
 // ===========================
-async function toggleScanner() {
-  if (scannerActive) {
-    stopScanner();
-    return;
-  }
+// ===========================
+// LABEL PHOTO + OCR
+// ===========================
+
+async function handleLabelPhoto(input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  // Show preview
+  const preview = document.getElementById('label-preview');
+  const reader = new FileReader();
+  reader.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; };
+  reader.readAsDataURL(file);
+
+  // Update UI
   const area = document.getElementById('scan-area');
-  const video = document.getElementById('scanner-video');
+  const iconEl = document.getElementById('scan-icon-el');
+  const hintEl = document.getElementById('scan-hint-el');
+  const progressEl = document.getElementById('ocr-progress');
+  const statusEl = document.getElementById('ocr-status');
+  const barEl = document.getElementById('ocr-bar');
+
+  area.classList.add('processing');
+  iconEl.style.display = 'none';
+  progressEl.classList.add('visible');
+  statusEl.textContent = 'Loading OCR engine…';
+  barEl.style.width = '10%';
+
   try {
-    scannerStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-    video.srcObject = scannerStream;
-    video.style.display = 'block';
-    area.classList.add('active');
-    area.querySelector('.scan-icon').style.display = 'none';
-    area.querySelector('.scan-hint').textContent = 'SCANNING… TAP TO STOP';
-    scannerActive = true;
-    scanFrame();
-  } catch(e) {
-    toast('Camera access denied or unavailable', 'error');
-  }
-}
+    // Load Tesseract from CDN
+    if (!window.Tesseract) {
+      await loadScript('https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.0.4/tesseract.min.js');
+    }
 
-function stopScanner() {
-  if (scannerStream) { scannerStream.getTracks().forEach(t => t.stop()); scannerStream = null; }
-  const video = document.getElementById('scanner-video');
-  video.style.display = 'none';
-  const area = document.getElementById('scan-area');
-  area.classList.remove('active');
-  area.querySelector('.scan-icon').style.display = 'block';
-  area.querySelector('.scan-hint').textContent = 'TAP TO SCAN BARCODE';
-  scannerActive = false;
-}
+    statusEl.textContent = 'Reading label text…';
+    barEl.style.width = '30%';
 
-function scanFrame() {
-  if (!scannerActive) return;
-  const video = document.getElementById('scanner-video');
-  const canvas = document.getElementById('scan-canvas');
-  if (video.readyState === video.HAVE_ENOUGH_DATA) {
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    canvas.getContext('2d').drawImage(video, 0, 0);
-    // Use BarcodeDetector if available
-    if ('BarcodeDetector' in window) {
-      const detector = new BarcodeDetector({ formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e'] });
-      detector.detect(canvas).then(barcodes => {
-        if (barcodes.length > 0) {
-          handleBarcode(barcodes[0].rawValue);
+    // Pre-process image for better OCR: scale up, increase contrast
+    const img = new Image();
+    await new Promise(res => { img.onload = res; img.src = URL.createObjectURL(file); });
+    const canvas = document.createElement('canvas');
+    const scale = Math.min(3, 1800 / Math.max(img.width, img.height));
+    canvas.width = img.width * scale;
+    canvas.height = img.height * scale;
+    const ctx = canvas.getContext('2d');
+    ctx.filter = 'contrast(1.4) brightness(1.05)';
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    const imageData = canvas.toDataURL('image/png');
+
+    barEl.style.width = '50%';
+
+    const result = await Tesseract.recognize(imageData, 'eng', {
+      logger: m => {
+        if (m.status === 'recognizing text') {
+          barEl.style.width = (50 + m.progress * 35) + '%';
         }
-      }).catch(() => {});
+      }
+    });
+
+    barEl.style.width = '88%';
+    statusEl.textContent = 'Parsing wine details…';
+
+    const rawText = result.data.text;
+    const parsed = parseLabelText(rawText);
+
+    barEl.style.width = '100%';
+
+    // Populate form
+    let filled = 0;
+    if (parsed.name)     { document.getElementById('f-name').value = parsed.name; filled++; }
+    if (parsed.producer) { document.getElementById('f-producer').value = parsed.producer; filled++; }
+    if (parsed.vintage)  { document.getElementById('f-vintage').value = parsed.vintage; filled++; }
+    if (parsed.varietal) { document.getElementById('f-varietal').value = parsed.varietal; filled++; }
+    if (parsed.region)   { document.getElementById('f-region').value = parsed.region; filled++; }
+    if (parsed.country)  { document.getElementById('f-country').value = parsed.country; filled++; }
+    if (parsed.type)     { document.getElementById('f-type').value = parsed.type; }
+
+    area.classList.remove('processing');
+    area.classList.add('success');
+    hintEl.textContent = filled > 0 ? `${filled} field${filled > 1 ? 's' : ''} populated — tap to rescan` : 'Label read — check fields below';
+    hintEl.style.display = 'block';
+    progressEl.classList.remove('visible');
+
+    if (filled > 0) {
+      toast(`Label scanned — ${filled} field${filled > 1 ? 's' : ''} populated ✓`, 'success');
+      // If online and we have name, try to enrich from Open Food Facts
+      if (navigator.onLine && parsed.name) enrichFromSearch(parsed);
+    } else {
+      toast('Could not parse label — please fill in manually');
     }
+
+  } catch(e) {
+    console.error(e);
+    area.classList.remove('processing');
+    progressEl.classList.remove('visible');
+    hintEl.style.display = 'block';
+    hintEl.textContent = 'OCR failed — try again or enter manually';
+    toast('Could not read label', 'error');
   }
-  if (scannerActive) requestAnimationFrame(scanFrame);
+
+  // Reset file input so same photo can be re-selected
+  input.value = '';
 }
 
-async function handleBarcode(code) {
-  stopScanner();
-  toast('Barcode: ' + code + ' — looking up…');
-  if (!navigator.onLine) {
-    toast('Offline — enter details manually', 'error');
-    return;
-  }
-  try {
-    // Open Food Facts barcode lookup
-    const resp = await fetch(`https://world.openfoodfacts.org/api/v0/product/${code}.json`);
-    const data = await resp.json();
-    if (data.status === 1 && data.product) {
-      const p = data.product;
-      document.getElementById('f-name').value = p.product_name || '';
-      document.getElementById('f-producer').value = p.brands || '';
-      document.getElementById('f-country').value = p.countries || '';
-      document.getElementById('f-region').value = p.origins || '';
-      if (p.ingredients_text) document.getElementById('f-notes').value = p.ingredients_text;
-      toast('Product found and populated ✓', 'success');
-    } else {
-      toast('Product not found — enter details manually');
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    if (document.querySelector(`script[src="${src}"]`)) { resolve(); return; }
+    const s = document.createElement('script');
+    s.src = src;
+    s.onload = resolve;
+    s.onerror = reject;
+    document.head.appendChild(s);
+  });
+}
+
+function parseLabelText(text) {
+  const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 1);
+  const allText = lines.join(' ');
+  const result = {};
+
+  // VINTAGE — 4-digit year 1900–2030
+  const vintageMatch = allText.match(/\b(19[5-9]\d|20[0-2]\d)\b/);
+  if (vintageMatch) result.vintage = parseInt(vintageMatch[1]);
+
+  // ALCOHOL % — helps confirm it's a wine label
+  const alcoholMatch = allText.match(/(\d{1,2}\.?\d?)\s*%\s*(alc|vol|by vol)/i);
+
+  // KNOWN VARIETALS
+  const varietals = [
+    'Cabernet Sauvignon','Cabernet Franc','Sauvignon Blanc','Pinot Noir','Pinot Grigio','Pinot Gris',
+    'Chardonnay','Merlot','Syrah','Shiraz','Grenache','Malbec','Tempranillo','Zinfandel',
+    'Riesling','Gewurztraminer','Viognier','Chenin Blanc','Sangiovese','Nebbiolo','Barbera',
+    'Mourvedre','Roussanne','Marsanne','Gruner Veltliner','Torrontes','Carmenere','Petit Verdot',
+    'Petite Sirah','Gamay','Muscat','Moscato','Prosecco','Champagne','Cava','Sparkling',
+    'Montepulciano','Primitivo','Nero d\'Avola','Vermentino','Fiano','Greco'
+  ];
+  for (const v of varietals) {
+    if (new RegExp('\\b' + v + '\\b', 'i').test(allText)) {
+      result.varietal = v;
+      break;
     }
-  } catch(e) {
-    toast('Lookup failed — enter details manually', 'error');
   }
+
+  // TYPE from varietal or keywords
+  const typeKeywords = {
+    red: ['rouge','red wine','red','rosso','tinto','rotwein'],
+    white: ['blanc','white wine','white','bianco','blanco','weisswein','weiss'],
+    'rosé': ['rosé','rose','rosato','rosat'],
+    sparkling: ['sparkling','champagne','cava','prosecco','cremant','crémant','sekt','frizzante','pétillant','pét-nat'],
+    dessert: ['sauternes','late harvest','eiswein','ice wine','botrytis','sweet'],
+    fortified: ['port','sherry','madeira','marsala','vermouth']
+  };
+  if (result.varietal) {
+    const lv = result.varietal.toLowerCase();
+    if (['prosecco','champagne','cava','sparkling'].includes(lv)) result.type = 'sparkling';
+    else if (['sauvignon blanc','chardonnay','pinot grigio','pinot gris','riesling','gewurztraminer','viognier','chenin blanc','gruner veltliner','torrontes','roussanne','marsanne','vermentino','fiano','greco','muscat','moscato'].includes(lv)) result.type = 'white';
+    else if (!result.type) result.type = 'red';
+  }
+  for (const [type, kws] of Object.entries(typeKeywords)) {
+    for (const kw of kws) {
+      if (allText.toLowerCase().includes(kw)) { result.type = type; break; }
+    }
+    if (result.type) break;
+  }
+
+  // KNOWN REGIONS / APPELLATIONS
+  const regions = [
+    'Bordeaux','Burgundy','Bourgogne','Champagne','Rhône','Alsace','Loire','Languedoc','Provence',
+    'Napa Valley','Sonoma','Willamette Valley','Paso Robles','Santa Barbara','Finger Lakes',
+    'Barossa Valley','McLaren Vale','Margaret River','Yarra Valley','Clare Valley','Eden Valley',
+    'Tuscany','Toscana','Piedmont','Piemonte','Veneto','Sicilia','Puglia',
+    'Rioja','Ribera del Duero','Priorat','Rias Baixas',
+    'Mendoza','Uco Valley','Maipo','Colchagua',
+    'Douro','Alentejo','Dao','Vinho Verde',
+    'Mosel','Rheingau','Pfalz','Baden',
+    'Marlborough','Central Otago','Hawke\'s Bay',
+    'Stellenbosch','Swartland','Franschhoek',
+    'Walla Walla','Columbia Valley','Yakima Valley',
+    'Châteauneuf-du-Pape','Côtes du Rhône','Saint-Émilion','Pomerol','Pauillac','Margaux',
+    'Gevrey-Chambertin','Meursault','Chablis','Beaujolais','Gigondas','Cairanne'
+  ];
+  for (const r of regions) {
+    if (new RegExp('\\b' + r.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i').test(allText)) {
+      result.region = r;
+      break;
+    }
+  }
+
+  // COUNTRY
+  const countries = {
+    'France': ['france','français','francais','vin de france'],
+    'Italy': ['italy','italia','italian'],
+    'Spain': ['spain','españa','espana','spanish'],
+    'USA': ['california','oregon','washington state','napa','sonoma','united states','usa'],
+    'Australia': ['australia','australian'],
+    'Argentina': ['argentina','argentine','argentinian','mendoza'],
+    'Chile': ['chile','chilean'],
+    'New Zealand': ['new zealand'],
+    'Portugal': ['portugal','portuguese'],
+    'Germany': ['germany','german','deutschland'],
+    'South Africa': ['south africa','stellenbosch','swartland'],
+    'Austria': ['austria','austrian','österreich']
+  };
+  for (const [country, kws] of Object.entries(countries)) {
+    for (const kw of kws) {
+      if (allText.toLowerCase().includes(kw)) { result.country = country; break; }
+    }
+    if (result.country) break;
+  }
+
+  // PRODUCER & NAME — heuristic: largest text lines near top are usually the producer/wine name
+  // Score lines by length and position; skip lines that are just numbers, % or generic words
+  const skipWords = /^(wine|vin|vino|winery|estate|château|chateau|domaine|bodega|cantina|weingut|product|imported|contains|sulfites|government|warning|alcohol|serve|store|best|enjoy|mis en|bottled|produce|appellation|controlée|contrôlée|denominacion|denominazione|qualitätswein|kabinett|spätlese|auslese|beerenauslese|trockenbeerenauslese|eiswein)$/i;
+  const goodLines = lines.filter(l => {
+    if (l.length < 3 || l.length > 60) return false;
+    if (/^\d+(\.\d+)?\s*(%|ml|cl|l|oz)$/i.test(l)) return false;
+    if (/^\d{4}$/.test(l)) return false; // year on its own — skip
+    const words = l.split(/\s+/);
+    if (words.length === 1 && skipWords.test(words[0])) return false;
+    return true;
+  });
+
+  // Best candidate lines: score by capitalization and length
+  const scored = goodLines.map(l => {
+    let score = 0;
+    if (/^[A-Z]/.test(l)) score += 2;
+    if (/^[A-Z\s]+$/.test(l)) score += 1; // ALL CAPS label lines
+    if (l.includes('Château') || l.includes('Domaine') || l.includes('Bodega') || l.includes('Weingut') || l.includes('Estate')) score += 3;
+    score += Math.min(l.length / 10, 3);
+    return { line: l, score };
+  }).sort((a, b) => b.score - a.score);
+
+  if (scored.length > 0) {
+    const top = scored[0].line;
+    // If it has producer keywords, assign to producer
+    if (/château|chateau|domaine|bodega|cantina|weingut|estate|winery|cellars?/i.test(top)) {
+      result.producer = top;
+      if (scored[1]) result.name = scored[1].line;
+    } else {
+      result.name = top;
+      if (scored[1] && scored[1].line !== top) result.producer = scored[1].line;
+    }
+  }
+
+  return result;
+}
+
+async function enrichFromSearch(parsed) {
+  try {
+    const query = [parsed.name, parsed.producer, parsed.vintage].filter(Boolean).join(' ');
+    const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&categories_tags=wines&json=1&page_size=1&fields=product_name,brands,origins,countries,ingredients_text`;
+    const resp = await fetch(url);
+    const data = await resp.json();
+    if (data.products && data.products[0]) {
+      const p = data.products[0];
+      if (p.origins && !document.getElementById('f-region').value)
+        document.getElementById('f-region').value = p.origins;
+      if (p.countries && !document.getElementById('f-country').value)
+        document.getElementById('f-country').value = p.countries;
+      if (p.ingredients_text && !document.getElementById('f-notes').value)
+        document.getElementById('f-notes').value = p.ingredients_text;
+    }
+  } catch(e) {}
 }
 
 // ===========================

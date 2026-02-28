@@ -424,6 +424,9 @@
 
   #file-input { display: none; }
 
+  #paste-area:hover { border-color: var(--gold) !important; }
+  #paste-area.success { border-color: var(--green) !important; border-style: solid !important; }
+
   .or-divider {
     display: flex;
     align-items: center;
@@ -776,9 +779,10 @@
 
 <header>
   <div>
-    <div class="logo">cave <span>wine cellar</span></div>
+    <div class="logo">cave <span>wine cellar &nbsp;·&nbsp; <span id="app-version">v1.0.0</span></span></div>
   </div>
   <div class="header-actions">
+    <button class="btn btn-sm btn-icon" onclick="openGithubSetup()" id="github-btn" title="GitHub Sync" style="font-size:15px;border-color:transparent;background:none;color:var(--text-muted)">⇅</button>
     <div class="sync-indicator">
       <div class="sync-dot" id="sync-dot"></div>
       <span id="sync-label">OFFLINE</span>
@@ -829,16 +833,49 @@
     </div>
 
     <!-- Scanner -->
-    <!-- Hidden file input: capture=environment opens rear camera on iOS -->
     <input type="file" id="file-input" accept="image/*" capture="environment" onchange="handleLabelPhoto(this)">
 
-    <div id="scan-area" onclick="document.getElementById('file-input').click()">
-      <div class="scan-icon" id="scan-icon-el">🍷</div>
-      <div class="scan-hint" id="scan-hint-el">TAP TO PHOTOGRAPH LABEL</div>
-      <img id="label-preview" alt="Label preview">
-      <div class="ocr-progress" id="ocr-progress">
-        <span id="ocr-status">Reading label…</span>
-        <div class="ocr-bar-track"><div class="ocr-bar-fill" id="ocr-bar"></div></div>
+    <!-- Two scan options side by side -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+
+      <!-- Option 1: Photo scan -->
+      <div id="scan-area" onclick="document.getElementById('file-input').click()" style="margin-bottom:0">
+        <div class="scan-icon" id="scan-icon-el">📷</div>
+        <div class="scan-hint" id="scan-hint-el">PHOTO SCAN</div>
+        <img id="label-preview" alt="Label preview">
+        <div class="ocr-progress" id="ocr-progress">
+          <span id="ocr-status">Reading label…</span>
+          <div class="ocr-bar-track"><div class="ocr-bar-fill" id="ocr-bar"></div></div>
+        </div>
+      </div>
+
+      <!-- Option 2: Live Text paste -->
+      <div id="paste-area" onclick="openPastePanel()" style="
+        border:1px dashed var(--border-light);border-radius:var(--radius);
+        padding:30px 16px;text-align:center;background:var(--bg3);
+        cursor:pointer;transition:all 0.2s;
+      ">
+        <div style="font-size:36px;color:var(--text-muted);margin-bottom:10px">✎</div>
+        <div style="font-size:10px;color:var(--text-muted);letter-spacing:0.1em">PASTE LABEL TEXT</div>
+        <div style="font-size:9px;color:var(--text-muted);margin-top:6px;letter-spacing:0.05em;line-height:1.5">Use iPhone Live Text<br>to copy, paste here</div>
+      </div>
+    </div>
+
+    <!-- Paste panel (hidden by default) -->
+    <div id="paste-panel" style="display:none;margin-bottom:20px">
+      <div class="form-section" style="margin-bottom:0">
+        <div class="form-section-title" style="margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">
+          <span>Paste Label Text</span>
+          <button onclick="closePastePanel()" style="background:none;border:none;color:var(--text-muted);font-size:16px;cursor:pointer;padding:0">✕</button>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-bottom:10px;line-height:1.7">
+          On iPhone: open Camera → point at label → tap Live Text icon (bottom right) → Select All → Copy. Then paste below.
+        </div>
+        <textarea id="paste-input" rows="5" placeholder="Paste label text here…" style="margin-bottom:10px;font-size:13px;line-height:1.6"></textarea>
+        <div style="display:flex;gap:8px;justify-content:flex-end">
+          <button class="btn btn-sm" onclick="closePastePanel()">Cancel</button>
+          <button class="btn btn-sm btn-primary" onclick="processPastedText()">Parse Label</button>
+        </div>
       </div>
     </div>
 
@@ -1114,6 +1151,62 @@
   <div class="st-meta" id="tt-meta"></div>
 </div>
 
+<!-- GitHub Setup Modal -->
+<div class="modal-overlay" id="github-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-wine-name">GitHub Sync</div>
+        <div class="modal-producer">Store your cellar data in your repository</div>
+      </div>
+      <button class="btn btn-sm btn-icon" onclick="closeModal('github-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="github-setup-view">
+        <div style="font-size:11px;color:var(--text-dim);line-height:1.8;margin-bottom:16px">
+          Your bottle data will be saved as <code style="color:var(--gold);font-size:11px">data/cellar.json</code> in your GitHub repo. You need a Personal Access Token with <code style="color:var(--gold);font-size:11px">repo</code> scope — it's stored only on this device.
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-bottom:14px;letter-spacing:0.08em">
+          To create a token: github.com → Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token → check <strong style="color:var(--cream-dim)">repo</strong> → Generate
+        </div>
+        <div class="field">
+          <label>GitHub Username</label>
+          <input type="text" id="gh-username" placeholder="e.g. tzoom08">
+        </div>
+        <div class="field">
+          <label>Repository Name</label>
+          <input type="text" id="gh-repo" placeholder="e.g. cave">
+        </div>
+        <div class="field">
+          <label>Personal Access Token</label>
+          <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxx">
+        </div>
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px">
+          <button class="btn btn-sm" onclick="closeModal('github-modal')">Cancel</button>
+          <button class="btn btn-sm btn-gold" onclick="saveGithubConfig()">Save & Sync</button>
+        </div>
+      </div>
+      <div id="github-status-view" style="display:none">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+          <div class="sync-dot online"></div>
+          <div>
+            <div style="font-size:13px;color:var(--cream)" id="gh-status-repo">—</div>
+            <div style="font-size:10px;color:var(--text-muted);margin-top:2px" id="gh-status-detail">Connected</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-sm btn-gold" onclick="githubPush()">↑ Push to GitHub</button>
+          <button class="btn btn-sm" onclick="githubPull()">↓ Pull from GitHub</button>
+          <button class="btn btn-sm" style="margin-left:auto;border-color:var(--wine);color:var(--wine-light)" onclick="disconnectGithub()">Disconnect</button>
+        </div>
+        <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);font-size:10px;color:var(--text-muted);line-height:1.7">
+          Auto-sync is <strong style="color:var(--cream-dim)">on</strong> — every add, edit, or delete pushes to GitHub automatically when online. Pull manually if you've edited <code style="color:var(--gold)">cellar.json</code> directly.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Toast container -->
 <div class="toast-container" id="toast-container"></div>
 
@@ -1134,6 +1227,18 @@ db.version(3).stores({
   syncQueue: '++id, bottleId, action, timestamp',
   photoQueue: '++id, addedAt, processed'
 });
+db.version(4).stores({
+  bottles: '++id, name, producer, vintage, type, varietal, region, rack, row, col, synced, addedAt',
+  racks: '++id, name, rows, cols',
+  syncQueue: '++id, bottleId, action, timestamp',
+  photoQueue: '++id, addedAt, processed',
+  settings: 'key'
+});
+
+// ===========================
+// VERSION
+// ===========================
+const APP_VERSION = '1.0.0';
 
 // ===========================
 // STATE
@@ -1146,13 +1251,27 @@ let currentRackId = null;
 let currentBottleId = null;
 let ocrWorker = null;
 let searchDebounce = null;
+let ghConfig = null; // { username, repo, token } — loaded from IndexedDB
 
 // ===========================
 // INIT
 // ===========================
 async function init() {
+  // Show version
+  document.getElementById('app-version').textContent = 'v' + APP_VERSION;
+
+  // Load GitHub config from IndexedDB settings store
+  await loadGithubConfig();
+
   await loadRacks();
-  await loadBottles();
+
+  // If GitHub configured and online, pull latest data first
+  if (ghConfig && navigator.onLine) {
+    await githubPull({ silent: true });
+  } else {
+    await loadBottles();
+  }
+
   renderCollection();
   renderStats();
   setupNav();
@@ -1379,6 +1498,7 @@ async function removeBottle(id) {
   renderCollection();
   renderStats();
   toast('Bottle removed');
+  githubPush({ silent: true });
 }
 
 function editBottleModal(id) {
@@ -1467,6 +1587,7 @@ async function addBottle() {
   renderCollection();
   renderStats();
   renderCellar();
+  githubPush({ silent: true });
 }
 
 function clearForm() {
@@ -1682,6 +1803,33 @@ async function handleLabelPhoto(input) {
   }
 
   input.value = '';
+}
+
+// ===========================
+// PASTE / LIVE TEXT
+// ===========================
+function openPastePanel() {
+  document.getElementById('paste-panel').style.display = 'block';
+  document.getElementById('paste-area').style.display = 'none';
+  setTimeout(() => document.getElementById('paste-input').focus(), 100);
+}
+
+function closePastePanel() {
+  document.getElementById('paste-panel').style.display = 'none';
+  document.getElementById('paste-area').style.display = 'block';
+  document.getElementById('paste-input').value = '';
+}
+
+function processPastedText() {
+  const text = document.getElementById('paste-input').value.trim();
+  if (!text) { toast('Paste some label text first', 'error'); return; }
+  const parsed = parseLabelText(text);
+  showLabelReview(parsed, text);
+  const pa = document.getElementById('paste-area');
+  pa.style.display = 'block';
+  pa.classList.add('success');
+  closePastePanel();
+  toast('Label text parsed ✓', 'success');
 }
 
 // Preprocess image for OCR: upscale, greyscale, sharpen, boost contrast
@@ -2372,16 +2520,25 @@ function renderStats() {
 // ===========================
 // SYNC STATUS
 // ===========================
-function updateSyncStatus() {
+function updateSyncStatus(state) {
   const dot = document.getElementById('sync-dot');
   const label = document.getElementById('sync-label');
+  const ghBtn = document.getElementById('github-btn');
+
+  if (state === 'syncing') {
+    dot.className = 'sync-dot syncing';
+    label.textContent = 'SYNCING';
+    return;
+  }
   if (navigator.onLine) {
     dot.className = 'sync-dot online';
-    label.textContent = 'ONLINE';
+    label.textContent = ghConfig ? 'GITHUB' : 'ONLINE';
+    if (ghBtn) ghBtn.style.color = ghConfig ? 'var(--gold)' : 'var(--text-muted)';
     updatePendingCount();
   } else {
     dot.className = 'sync-dot';
     label.textContent = 'OFFLINE';
+    if (ghBtn) ghBtn.style.color = 'var(--text-muted)';
     updatePendingCount();
   }
 }
@@ -2414,6 +2571,229 @@ function toast(msg, type = '') {
 // UTILS
 // ===========================
 function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
+
+// ===========================
+// GITHUB SYNC
+// ===========================
+
+async function loadGithubConfig() {
+  try {
+    const settings = await db.table('settings').toArray().catch(() => []);
+    const cfg = settings.find(s => s.key === 'githubConfig');
+    if (cfg) {
+      ghConfig = cfg.value;
+      updateGithubModalUI();
+      updateSyncStatus();
+    }
+  } catch(e) {}
+}
+
+async function saveGithubConfig() {
+  const username = document.getElementById('gh-username').value.trim();
+  const repo = document.getElementById('gh-repo').value.trim();
+  const token = document.getElementById('gh-token').value.trim();
+
+  if (!username || !repo || !token) {
+    toast('Please fill in all fields', 'error'); return;
+  }
+
+  // Test the token with a lightweight API call
+  toast('Verifying token…');
+  try {
+    const test = await fetch(`https://api.github.com/repos/${username}/${repo}`, {
+      headers: { Authorization: `token ${token}`, 'User-Agent': 'Cave-WineCellar' }
+    });
+    if (!test.ok) {
+      toast('Could not access repo — check username, repo name, and token', 'error');
+      return;
+    }
+  } catch(e) {
+    toast('Network error — check your connection', 'error'); return;
+  }
+
+  ghConfig = { username, repo, token };
+
+  // Store in settings table
+  try {
+    await db.table('settings').put({ key: 'githubConfig', value: ghConfig });
+  } catch(e) {
+    // settings table may not exist yet — add to db version
+    toast('Please reload the app after this first save', 'error');
+  }
+
+  updateGithubModalUI();
+  updateSyncStatus();
+  closeModal('github-modal');
+  toast('GitHub connected ✓', 'success');
+
+  // Push current local data immediately
+  await githubPush({ silent: false });
+}
+
+function updateGithubModalUI() {
+  const setup = document.getElementById('github-setup-view');
+  const status = document.getElementById('github-status-view');
+  if (!setup || !status) return;
+  if (ghConfig) {
+    setup.style.display = 'none';
+    status.style.display = 'block';
+    document.getElementById('gh-status-repo').textContent = `${ghConfig.username}/${ghConfig.repo}`;
+    document.getElementById('gh-status-detail').textContent = `data/cellar.json · auto-sync on`;
+  } else {
+    setup.style.display = 'block';
+    status.style.display = 'none';
+  }
+}
+
+function openGithubSetup() {
+  updateGithubModalUI();
+  if (ghConfig) {
+    // Pre-fill fields in case they want to update
+    document.getElementById('gh-username').value = ghConfig.username || '';
+    document.getElementById('gh-repo').value = ghConfig.repo || '';
+  }
+  document.getElementById('github-modal').classList.add('open');
+}
+
+async function disconnectGithub() {
+  if (!confirm('Disconnect GitHub? Your local data stays intact.')) return;
+  ghConfig = null;
+  try { await db.table('settings').delete('githubConfig'); } catch(e) {}
+  updateGithubModalUI();
+  updateSyncStatus();
+  closeModal('github-modal');
+  toast('GitHub disconnected');
+}
+
+// Push all local data to GitHub as data/cellar.json
+async function githubPush({ silent = false } = {}) {
+  if (!ghConfig || !navigator.onLine) return;
+
+  if (!silent) updateSyncStatus('syncing');
+
+  try {
+    const { username, repo, token } = ghConfig;
+    const path = 'data/cellar.json';
+    const apiBase = `https://api.github.com/repos/${username}/${repo}/contents/${path}`;
+    const headers = {
+      Authorization: `token ${token}`,
+      'Content-Type': 'application/json',
+      'User-Agent': 'Cave-WineCellar'
+    };
+
+    // Build the payload — all bottles + racks
+    const allBottles = await db.bottles.toArray();
+    const allRacks = await db.racks.toArray();
+    const payload = {
+      version: APP_VERSION,
+      exportedAt: new Date().toISOString(),
+      racks: allRacks,
+      bottles: allBottles
+    };
+    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
+
+    // Get current SHA (needed to update existing file)
+    let sha = null;
+    try {
+      const existing = await fetch(apiBase, { headers });
+      if (existing.ok) {
+        const data = await existing.json();
+        sha = data.sha;
+      }
+    } catch(e) {}
+
+    const body = {
+      message: `Update cellar — ${allBottles.length} bottle${allBottles.length !== 1 ? 's' : ''} · v${APP_VERSION}`,
+      content: encoded,
+      ...(sha ? { sha } : {})
+    };
+
+    const resp = await fetch(apiBase, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify(body)
+    });
+
+    if (!resp.ok) {
+      const err = await resp.json();
+      throw new Error(err.message || 'Push failed');
+    }
+
+    if (!silent) {
+      updateSyncStatus();
+      toast(`Pushed to GitHub ✓ (${allBottles.length} bottles)`, 'success');
+    } else {
+      updateSyncStatus();
+    }
+  } catch(e) {
+    console.error('GitHub push error:', e);
+    updateSyncStatus();
+    if (!silent) toast('GitHub push failed: ' + e.message, 'error');
+  }
+}
+
+// Pull data/cellar.json from GitHub and merge into local DB
+async function githubPull({ silent = false } = {}) {
+  if (!ghConfig || !navigator.onLine) return;
+
+  if (!silent) updateSyncStatus('syncing');
+
+  try {
+    const { username, repo, token } = ghConfig;
+    const path = 'data/cellar.json';
+    const apiBase = `https://api.github.com/repos/${username}/${repo}/contents/${path}`;
+    const headers = {
+      Authorization: `token ${token}`,
+      'User-Agent': 'Cave-WineCellar'
+    };
+
+    const resp = await fetch(apiBase, { headers });
+    if (resp.status === 404) {
+      // File doesn't exist yet — push current data
+      await loadBottles();
+      updateSyncStatus();
+      if (!silent) toast('No remote data yet — will create on next save');
+      return;
+    }
+    if (!resp.ok) throw new Error('Pull failed: ' + resp.status);
+
+    const data = await resp.json();
+    const json = JSON.parse(decodeURIComponent(escape(atob(data.content.replace(/\n/g, '')))));
+
+    // Restore racks first (clear and replace)
+    if (json.racks && json.racks.length > 0) {
+      await db.racks.clear();
+      for (const r of json.racks) {
+        const { id, ...rackData } = r;
+        await db.racks.add({ id, ...rackData });
+      }
+      racks = await db.racks.toArray();
+    }
+
+    // Restore bottles (clear and replace)
+    if (json.bottles) {
+      await db.bottles.clear();
+      for (const b of json.bottles) {
+        const { id, ...bottleData } = b;
+        await db.bottles.add({ id, ...bottleData });
+      }
+    }
+
+    await loadBottles();
+    updateSyncStatus();
+
+    if (!silent) {
+      renderCollection();
+      renderStats();
+      toast(`Pulled from GitHub ✓ (${json.bottles?.length || 0} bottles)`, 'success');
+    }
+  } catch(e) {
+    console.error('GitHub pull error:', e);
+    await loadBottles();
+    updateSyncStatus();
+    if (!silent) toast('GitHub pull failed: ' + e.message, 'error');
+  }
+}
 
 // ===========================
 // SERVICE WORKER

@@ -1648,13 +1648,17 @@ async function handleLabelPhoto(input) {
     barEl.style.width = '50%';
 
     // Reconstruct File from base64 for Tesseract
-    const dataUrl = 'data:image/jpeg;base64,' + base64;
+    const dataUrl = 'data:image/png;base64,' + base64;
     const result = await Tesseract.recognize(dataUrl, 'eng', {
       logger: m => {
         if (m.status === 'recognizing text') {
           barEl.style.width = (50 + m.progress * 40) + '%';
         }
-      }
+      },
+      // PSM 3 = fully automatic page segmentation (best for labels)
+      // OEM 1 = LSTM neural net only (most accurate)
+      tessedit_pageseg_mode: '3',
+      tessedit_ocr_engine_mode: '1',
     });
 
     barEl.style.width = '100%';
@@ -1680,20 +1684,63 @@ async function handleLabelPhoto(input) {
   input.value = '';
 }
 
-// Resize image and return base64-encoded JPEG string (no data: prefix)
+// Preprocess image for OCR: upscale, greyscale, sharpen, boost contrast
 function resizeImageToBase64(file, maxDim) {
   return new Promise((resolve, reject) => {
     const img = new Image();
     const url = URL.createObjectURL(file);
     img.onload = () => {
       URL.revokeObjectURL(url);
-      const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
-      const canvas = document.createElement('canvas');
-      canvas.width = Math.round(img.width * scale);
-      canvas.height = Math.round(img.height * scale);
-      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.88);
-      resolve(dataUrl.split(',')[1]); // strip "data:image/jpeg;base64,"
+
+      // Scale UP small images, cap large ones at maxDim
+      const scale = Math.min(maxDim / Math.max(img.width, img.height), 3.0);
+      const w = Math.round(img.width * scale);
+      const h = Math.round(img.height * scale);
+
+      // Step 1: draw at scale
+      const c1 = document.createElement('canvas');
+      c1.width = w; c1.height = h;
+      const ctx1 = c1.getContext('2d');
+      ctx1.drawImage(img, 0, 0, w, h);
+
+      // Step 2: convert to greyscale + boost contrast via pixel manipulation
+      const imageData = ctx1.getImageData(0, 0, w, h);
+      const d = imageData.data;
+      for (let i = 0; i < d.length; i += 4) {
+        // Greyscale using luminance weights
+        let v = 0.299 * d[i] + 0.587 * d[i+1] + 0.114 * d[i+2];
+        // S-curve contrast boost — pulls midtones toward extremes
+        v = v / 255;
+        v = v < 0.5
+          ? 2 * v * v
+          : 1 - Math.pow(-2 * v + 2, 2) / 2;
+        v = Math.round(v * 255);
+        // Extra brightness lift for dark images
+        v = Math.min(255, v * 1.15);
+        d[i] = d[i+1] = d[i+2] = v;
+      }
+      ctx1.putImageData(imageData, 0, 0);
+
+      // Step 3: unsharp mask — draw on a second canvas with blur then subtract
+      const c2 = document.createElement('canvas');
+      c2.width = w; c2.height = h;
+      const ctx2 = c2.getContext('2d');
+      ctx2.filter = 'blur(1.5px)';
+      ctx2.drawImage(c1, 0, 0);
+      ctx2.filter = 'none';
+
+      const sharp = ctx1.getImageData(0, 0, w, h);
+      const blurred = ctx2.getImageData(0, 0, w, h);
+      const sd = sharp.data, bd = blurred.data;
+      const amount = 1.8; // sharpening strength
+      for (let i = 0; i < sd.length; i += 4) {
+        const s = sd[i], b = bd[i];
+        const sharpened = Math.min(255, Math.max(0, s + amount * (s - b)));
+        sd[i] = sd[i+1] = sd[i+2] = sharpened;
+      }
+      ctx1.putImageData(sharp, 0, 0);
+
+      resolve(c1.toDataURL('image/png').split(',')[1]);
     };
     img.onerror = reject;
     img.src = url;
@@ -1823,10 +1870,20 @@ function showLabelReview(parsed, rawText) {
   const existing = document.getElementById('label-review-panel');
   if (existing) existing.remove();
 
-  // Clean lines for display — deduplicated, non-trivial
-  const lines = (parsed._lines || rawText.split('\n'))
-    .map(l => l.trim())
-    .filter((l, i, arr) => l.length > 1 && arr.indexOf(l) === i);
+  // Clean lines — filter OCR garbage, deduplicate, keep only plausible text
+  const allLines = (parsed._lines || rawText.split('\n')).map(l => l.trim());
+  const lines = allLines.filter((l, i, arr) => {
+    if (l.length < 2) return false;
+    if (arr.indexOf(l) !== i) return false; // deduplicate
+    // Remove lines that are >60% non-alphabetic (likely OCR noise)
+    const alphaCount = (l.match(/[a-zA-ZÀ-ÿ]/g) || []).length;
+    if (alphaCount / l.length < 0.4) return false;
+    // Remove lines with too many consecutive numbers (not wine-relevant)
+    if (/\d{6,}/.test(l)) return false;
+    // Remove very long garbled lines
+    if (l.length > 50 && alphaCount / l.length < 0.6) return false;
+    return true;
+  });
 
   const fields = [
     { id: 'f-name',     label: 'Wine Name',  val: parsed.name     || '' },
@@ -2014,8 +2071,11 @@ async function processPhotoQueue() {
       if (!window.Tesseract) {
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.0.4/tesseract.min.js');
       }
-      const dataUrl = 'data:image/jpeg;base64,' + item.base64;
-      const result = await Tesseract.recognize(dataUrl, 'eng');
+      const dataUrl = 'data:image/png;base64,' + item.base64;
+      const result = await Tesseract.recognize(dataUrl, 'eng', {
+        tessedit_pageseg_mode: '3',
+        tessedit_ocr_engine_mode: '1',
+      });
       const parsed = parseLabelText(result.data.text);
       await db.photoQueue.update(item.id, { processed: 1, result: JSON.stringify(parsed) });
     } catch(e) {

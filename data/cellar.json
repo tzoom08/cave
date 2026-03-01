@@ -1,6 +1,6 @@
 {
   "version": "1.2.4",
-  "exportedAt": "2026-03-01T01:01:00.674Z",
+  "exportedAt": "2026-03-01T01:01:30.929Z",
   "racks": [
     {
       "id": 1,
@@ -41,7 +41,7 @@
       "id": 2
     },
     {
-      "addedAt": "2026-02-28T23:22:14.315Z",
+      "addedAt": "2026-03-01T01:01:30.909Z",
       "synced": false,
       "name": "Le Ciel Serein",
       "producer": "Domaine Carneros",
@@ -50,10 +50,19 @@
       "varietal": "Pinot Noir",
       "country": "USA",
       "quantity": 1,
-      "rack": 2,
+      "rack": null,
       "row": 1,
       "col": 4,
-      "id": 3
+      "id": 3,
+      "region": "",
+      "purchasePrice": null,
+      "marketValue": null,
+      "drinkBy": "",
+      "priceTier": "$$$",
+      "score": null,
+      "critic": "",
+      "notes": "",
+      "personal": ""
     },
     {
       "addedAt": "2026-02-28",

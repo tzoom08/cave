@@ -1,6 +1,6 @@
 {
-  "version": "1.2.4",
-  "exportedAt": "2026-03-01T01:11:01.361Z",
+  "version": "1.2.5",
+  "exportedAt": "2026-03-01T01:18:15.511Z",
   "racks": [
     {
       "id": 1,
@@ -9,16 +9,16 @@
       "cols": 4
     },
     {
+      "id": 2,
       "name": "Basement Left",
       "rows": 7,
-      "cols": 4,
-      "id": 2
+      "cols": 4
     },
     {
+      "id": 3,
       "name": "Basement Right",
       "rows": 7,
-      "cols": 4,
-      "id": 3
+      "cols": 4
     }
   ],
   "bottles": [
@@ -33,18 +33,11 @@
       "region": "Castel del Monte",
       "country": "Italy",
       "quantity": 1,
+      "priceTier": "$",
       "rack": 1,
       "row": 1,
       "col": 3,
-      "id": 1,
-      "purchasePrice": null,
-      "marketValue": null,
-      "drinkBy": "",
-      "priceTier": "$",
-      "score": null,
-      "critic": "",
-      "notes": "",
-      "personal": ""
+      "id": 14
     },
     {
       "addedAt": "2026-03-01T01:04:47.217Z",
@@ -55,20 +48,11 @@
       "type": "white",
       "country": "Spain",
       "quantity": 1,
+      "priceTier": "$",
       "rack": 1,
       "row": 1,
       "col": 2,
-      "id": 2,
-      "varietal": "",
-      "region": "",
-      "purchasePrice": null,
-      "marketValue": null,
-      "drinkBy": "",
-      "priceTier": "$",
-      "score": null,
-      "critic": "",
-      "notes": "",
-      "personal": ""
+      "id": 15
     },
     {
       "addedAt": "2026-03-01T01:05:09.814Z",
@@ -80,19 +64,11 @@
       "varietal": "Pinot Noir",
       "country": "USA",
       "quantity": 1,
+      "priceTier": "$",
       "rack": 1,
       "row": 1,
       "col": 4,
-      "id": 3,
-      "region": "",
-      "purchasePrice": null,
-      "marketValue": null,
-      "drinkBy": "",
-      "priceTier": "$",
-      "score": null,
-      "critic": "",
-      "notes": "",
-      "personal": ""
+      "id": 16
     },
     {
       "addedAt": "2026-02-28",
@@ -104,8 +80,14 @@
       "varietal": "Pinot Noir",
       "region": "Oregon",
       "country": "USA",
+      "purchasePrice": 45,
+      "marketValue": 45,
       "quantity": 1,
-      "id": 4
+      "priceTier": "$$",
+      "rack": 2,
+      "row": 2,
+      "col": 2,
+      "id": 17
     },
     {
       "addedAt": "2026-02-28",
@@ -117,8 +99,14 @@
       "varietal": "Pinot Noir",
       "region": "Oregon",
       "country": "USA",
+      "purchasePrice": 45,
+      "marketValue": 45,
       "quantity": 1,
-      "id": 5
+      "priceTier": "$$",
+      "rack": 2,
+      "row": 2,
+      "col": 3,
+      "id": 18
     }
   ]
 }

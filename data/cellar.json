@@ -1,6 +1,6 @@
 {
   "version": "1.2.4",
-  "exportedAt": "2026-03-01T01:05:47.974Z",
+  "exportedAt": "2026-03-01T01:11:01.361Z",
   "racks": [
     {
       "id": 1,
@@ -13,6 +13,12 @@
       "rows": 7,
       "cols": 4,
       "id": 2
+    },
+    {
+      "name": "Basement Right",
+      "rows": 7,
+      "cols": 4,
+      "id": 3
     }
   ],
   "bottles": [

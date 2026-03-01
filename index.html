@@ -1036,8 +1036,15 @@
 
   <!-- STATS -->
   <div class="view" id="view-stats">
+    <!-- Hidden CSV upload input -->
+    <input type="file" id="csv-import-input" accept=".csv" style="display:none" onchange="handleCsvImport(this)">
+
     <div class="section-header">
       <div class="section-title">Statistics</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-sm" onclick="exportCsv()">↓ Export CSV</button>
+        <button class="btn btn-sm btn-gold" onclick="document.getElementById('csv-import-input').click()">↑ Import CSV</button>
+      </div>
     </div>
 
     <div class="grid-3" style="margin-bottom:20px">
@@ -1238,7 +1245,7 @@ db.version(4).stores({
 // ===========================
 // VERSION
 // ===========================
-const APP_VERSION = '1.0.0';
+const APP_VERSION = '1.1.0';
 
 // ===========================
 // STATE
@@ -2793,6 +2800,222 @@ async function githubPull({ silent = false } = {}) {
     updateSyncStatus();
     if (!silent) toast('GitHub pull failed: ' + e.message, 'error');
   }
+}
+
+// ===========================
+// CSV EXPORT / IMPORT
+// ===========================
+
+const CSV_FIELDS = [
+  { key: 'name',          label: 'Name' },
+  { key: 'producer',      label: 'Producer' },
+  { key: 'vintage',       label: 'Vintage' },
+  { key: 'type',          label: 'Type' },
+  { key: 'varietal',      label: 'Varietal' },
+  { key: 'region',        label: 'Region' },
+  { key: 'country',       label: 'Country' },
+  { key: 'purchasePrice', label: 'Purchase Price' },
+  { key: 'marketValue',   label: 'Market Value' },
+  { key: 'quantity',      label: 'Quantity' },
+  { key: 'score',         label: 'Score' },
+  { key: 'critic',        label: 'Critic' },
+  { key: 'drinkBy',       label: 'Drink By' },
+  { key: 'rack',          label: 'Rack ID' },
+  { key: 'row',           label: 'Row' },
+  { key: 'col',           label: 'Col' },
+  { key: 'notes',         label: 'Tasting Notes' },
+  { key: 'personal',      label: 'Personal Notes' },
+  { key: 'addedAt',       label: 'Date Added' },
+];
+
+function csvEscape(val) {
+  if (val == null || val === '') return '';
+  const s = String(val);
+  // Wrap in quotes if contains comma, quote, or newline
+  if (s.includes(',') || s.includes('"') || s.includes('\n')) {
+    return '"' + s.replace(/"/g, '""') + '"';
+  }
+  return s;
+}
+
+async function exportCsv() {
+  const allBottles = await db.bottles.toArray();
+  if (allBottles.length === 0) { toast('No bottles to export', 'error'); return; }
+
+  // Build header row — include rack name as a friendly column alongside Rack ID
+  const headers = [...CSV_FIELDS.map(f => f.label), 'Rack Name'];
+  const allRacks = await db.racks.toArray();
+  const rackMap = {};
+  allRacks.forEach(r => rackMap[r.id] = r.name);
+
+  const rows = allBottles.map(b => {
+    const vals = CSV_FIELDS.map(f => csvEscape(b[f.key]));
+    vals.push(csvEscape(b.rack ? (rackMap[b.rack] || '') : ''));
+    return vals.join(',');
+  });
+
+  const csv = [headers.join(','), ...rows].join('\r\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `cave-cellar-${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast(`Exported ${allBottles.length} bottles ✓`, 'success');
+}
+
+async function handleCsvImport(input) {
+  const file = input.files[0];
+  if (!file) return;
+  input.value = '';
+
+  const text = await file.text();
+  const lines = text.split(/\r?\n/).filter(l => l.trim());
+  if (lines.length < 2) { toast('CSV appears empty', 'error'); return; }
+
+  // Parse header row — map column names to field keys
+  const headerRow = parseCsvLine(lines[0]);
+  const labelToKey = {};
+  CSV_FIELDS.forEach(f => { labelToKey[f.label.toLowerCase()] = f.key; });
+  // Also accept raw key names (for round-trip compatibility)
+  CSV_FIELDS.forEach(f => { labelToKey[f.key.toLowerCase()] = f.key; });
+
+  const colMap = headerRow.map(h => labelToKey[h.trim().toLowerCase()] || null);
+
+  const validLines = lines.slice(1).filter(l => l.trim());
+  if (validLines.length === 0) { toast('No data rows found', 'error'); return; }
+
+  // Show import preview modal
+  showCsvImportPreview(colMap, headerRow, validLines);
+}
+
+function parseCsvLine(line) {
+  const result = [];
+  let current = '';
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') {
+      if (inQuotes && line[i+1] === '"') { current += '"'; i++; }
+      else inQuotes = !inQuotes;
+    } else if (ch === ',' && !inQuotes) {
+      result.push(current); current = '';
+    } else {
+      current += ch;
+    }
+  }
+  result.push(current);
+  return result;
+}
+
+function showCsvImportPreview(colMap, headerRow, lines) {
+  // Parse a few rows for preview
+  const preview = lines.slice(0, 3).map(l => {
+    const vals = parseCsvLine(l);
+    const obj = {};
+    colMap.forEach((key, i) => { if (key && vals[i] !== undefined) obj[key] = vals[i]; });
+    return obj;
+  });
+
+  const existing = document.getElementById('csv-preview-modal');
+  if (existing) existing.remove();
+
+  const modal = document.createElement('div');
+  modal.id = 'csv-preview-modal';
+  modal.className = 'modal-overlay open';
+  modal.innerHTML = `
+    <div class="modal" style="max-width:540px">
+      <div class="modal-header">
+        <div>
+          <div class="modal-wine-name">Import CSV</div>
+          <div class="modal-producer">${lines.length} row${lines.length !== 1 ? 's' : ''} found</div>
+        </div>
+        <button class="btn btn-sm btn-icon" onclick="document.getElementById('csv-preview-modal').remove()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="font-size:10px;color:var(--text-muted);margin-bottom:12px;line-height:1.7">
+          Previewing first ${Math.min(3, lines.length)} row${lines.length > 1 ? 's' : ''}. Choose whether to merge with your existing collection or replace it entirely.
+        </div>
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:2px;padding:12px;margin-bottom:16px;overflow-x:auto">
+          ${preview.map(b => `
+            <div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border);font-size:11px;color:var(--cream-dim)">
+              <span style="color:var(--cream);font-family:var(--font-serif);font-size:14px">${b.name || '(no name)'}</span>
+              ${b.producer ? ` · ${b.producer}` : ''}
+              ${b.vintage ? ` · ${b.vintage}` : ''}
+              ${b.type ? ` · <span style="color:var(--wine-light)">${b.type}</span>` : ''}
+            </div>
+          `).join('')}
+          ${lines.length > 3 ? `<div style="font-size:10px;color:var(--text-muted)">…and ${lines.length - 3} more</div>` : ''}
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-sm" onclick="document.getElementById('csv-preview-modal').remove()">Cancel</button>
+          <button class="btn btn-sm" onclick="commitCsvImport(${JSON.stringify(colMap).replace(/"/g,'&quot;')}, ${JSON.stringify(lines).replace(/"/g,'&quot;')}, 'merge')" style="border-color:var(--gold);color:var(--gold)">Merge with existing</button>
+          <button class="btn btn-sm btn-primary" onclick="commitCsvImport(${JSON.stringify(colMap).replace(/"/g,'&quot;')}, ${JSON.stringify(lines).replace(/"/g,'&quot;')}, 'replace')">Replace collection</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+}
+
+async function commitCsvImport(colMap, lines, mode) {
+  document.getElementById('csv-preview-modal')?.remove();
+
+  if (mode === 'replace') {
+    await db.bottles.clear();
+  }
+
+  let imported = 0;
+  const allRacks = await db.racks.toArray();
+  const rackNameMap = {};
+  allRacks.forEach(r => rackNameMap[r.name.toLowerCase()] = r.id);
+
+  for (const line of lines) {
+    const vals = parseCsvLine(line);
+    const b = { addedAt: new Date().toISOString(), synced: false };
+    colMap.forEach((key, i) => {
+      if (!key || vals[i] === undefined || vals[i] === '') return;
+      const v = vals[i].trim();
+      // Type coerce numeric fields
+      if (['vintage','quantity','score','row','col'].includes(key)) {
+        const n = parseInt(v);
+        if (!isNaN(n)) b[key] = n;
+      } else if (['purchasePrice','marketValue'].includes(key)) {
+        const n = parseFloat(v);
+        if (!isNaN(n)) b[key] = n;
+      } else if (key === 'rack') {
+        // Try numeric ID first, then look up by name from 'Rack Name' column
+        const n = parseInt(v);
+        if (!isNaN(n)) b[key] = n;
+      } else {
+        b[key] = v;
+      }
+    });
+
+    // Resolve rack name → ID if we have it
+    const rackNameIdx = colMap.indexOf(null); // 'Rack Name' won't map to a key
+    // Find 'Rack Name' column from header
+    if (!b.rack) {
+      const rackNameColIdx = colMap.findIndex((k, i) => k === null && vals[i]);
+      if (rackNameColIdx >= 0) {
+        const rn = vals[rackNameColIdx]?.trim().toLowerCase();
+        if (rn && rackNameMap[rn]) b.rack = rackNameMap[rn];
+      }
+    }
+
+    if (b.name) {
+      await db.bottles.add(b);
+      imported++;
+    }
+  }
+
+  await loadBottles();
+  renderCollection();
+  renderStats();
+  githubPush({ silent: true });
+  toast(`Imported ${imported} bottle${imported !== 1 ? 's' : ''} ✓`, 'success');
 }
 
 // ===========================

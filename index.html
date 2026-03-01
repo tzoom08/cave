@@ -13,23 +13,23 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inconsolata:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0e0603;
-    --bg2: #160c07;
-    --bg3: #1f1109;
-    --surface: #2a1a0e;
-    --surface2: #3a2416;
-    --border: #4a3020;
-    --border-light: #6a4830;
+    --bg: #f7f4f0;
+    --bg2: #ffffff;
+    --bg3: #f0ece6;
+    --surface: #e8e2d8;
+    --surface2: #ddd6c8;
+    --border: #d4c8b8;
+    --border-light: #bfb0a0;
     --wine: #8b1a1a;
     --wine-light: #c42b2b;
-    --gold: #c4952a;
-    --gold-light: #e8b84b;
-    --cream: #e8dcc8;
-    --cream-dim: #a89070;
-    --text: #e8dcc8;
-    --text-dim: #8a7060;
-    --text-muted: #5a4030;
-    --green: #4a8a4a;
+    --gold: #9a6e1a;
+    --gold-light: #c49030;
+    --cream: #1a120a;
+    --cream-dim: #4a3828;
+    --text: #1a120a;
+    --text-dim: #6a5040;
+    --text-muted: #9a8878;
+    --green: #2d6e2d;
     --radius: 2px;
     --font-serif: 'Cormorant Garamond', Georgia, serif;
     --font-mono: 'Inconsolata', monospace;
@@ -186,7 +186,7 @@
   }
   input:focus, select:focus, textarea:focus { border-color: var(--gold); }
   input::placeholder { color: var(--text-muted); }
-  select option { background: var(--bg3); }
+  select option { background: var(--bg2); }
 
   label {
     font-size: 9px;
@@ -1245,7 +1245,7 @@ db.version(4).stores({
 // ===========================
 // VERSION
 // ===========================
-const APP_VERSION = '1.1.0';
+const APP_VERSION = '1.2.0';
 
 // ===========================
 // STATE
@@ -1363,12 +1363,50 @@ function openRackConfig() {
 function renderRackConfig() {
   const list = document.getElementById('rack-config-list');
   list.innerHTML = racks.map(r => `
-    <div class="rack-config-item">
-      <span style="flex:2;font-size:13px;color:var(--cream)">${r.name}</span>
-      <span style="font-size:10px;color:var(--text-muted)">${r.rows}R × ${r.cols}C</span>
-      <button class="btn btn-sm" style="border-color:var(--wine);color:var(--wine-light)" onclick="removeRack(${r.id})">Remove</button>
+    <div class="rack-config-item" id="rack-cfg-${r.id}">
+      <div style="display:flex;gap:6px;align-items:center;flex:1" id="rack-view-${r.id}">
+        <span style="flex:2;font-size:13px;color:var(--text)">${r.name}</span>
+        <span style="font-size:10px;color:var(--text-muted);white-space:nowrap">${r.rows}R × ${r.cols}C</span>
+        <button class="btn btn-sm" onclick="startEditRack(${r.id})" style="white-space:nowrap">Edit</button>
+        <button class="btn btn-sm" style="border-color:var(--wine);color:var(--wine-light);white-space:nowrap" onclick="removeRack(${r.id})">Remove</button>
+      </div>
+      <div style="display:none;gap:6px;align-items:center;flex:1;flex-wrap:wrap" id="rack-edit-${r.id}">
+        <input type="text" value="${r.name}" id="rack-edit-name-${r.id}" placeholder="Rack name"
+          style="flex:2;min-width:100px;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:2px;outline:none">
+        <input type="number" value="${r.rows}" id="rack-edit-rows-${r.id}" min="1" max="30"
+          style="width:52px;font-size:12px;padding:5px 6px;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:2px;outline:none" title="Rows">
+        <input type="number" value="${r.cols}" id="rack-edit-cols-${r.id}" min="1" max="50"
+          style="width:52px;font-size:12px;padding:5px 6px;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:2px;outline:none" title="Cols">
+        <button class="btn btn-sm btn-primary" onclick="saveEditRack(${r.id})">Save</button>
+        <button class="btn btn-sm" onclick="cancelEditRack(${r.id})">Cancel</button>
+      </div>
     </div>
   `).join('') || '<div style="color:var(--text-muted);font-size:11px;padding:10px 0">No racks configured</div>';
+}
+
+function startEditRack(id) {
+  document.getElementById('rack-view-' + id).style.display = 'none';
+  document.getElementById('rack-edit-' + id).style.display = 'flex';
+  document.getElementById('rack-edit-name-' + id).focus();
+}
+
+function cancelEditRack(id) {
+  document.getElementById('rack-edit-' + id).style.display = 'none';
+  document.getElementById('rack-view-' + id).style.display = 'flex';
+}
+
+async function saveEditRack(id) {
+  const name = document.getElementById('rack-edit-name-' + id).value.trim() || 'Rack';
+  const rows = parseInt(document.getElementById('rack-edit-rows-' + id).value) || 6;
+  const cols = parseInt(document.getElementById('rack-edit-cols-' + id).value) || 12;
+  await db.racks.update(id, { name, rows, cols });
+  racks = await db.racks.toArray();
+  if (!currentRackId) currentRackId = racks[0]?.id || null;
+  renderRackConfig();
+  renderCellarTabs();
+  renderCellar();
+  githubPush({ silent: true });
+  toast('Rack updated ✓', 'success');
 }
 
 function populateRackSelect() {
@@ -1418,8 +1456,17 @@ function renderCollection() {
   }
   empty.style.display = 'none';
 
-  grid.innerHTML = filtered.map(b => `
+  grid.innerHTML = filtered.map(b => {
+    const price = b.purchasePrice || b.marketValue;
+    const priceLabel = price
+      ? `<div style="
+          font-family:var(--font-mono);font-size:11px;font-weight:600;
+          color:var(--wine);letter-spacing:0.04em;margin-bottom:8px;
+        ">$${price % 1 === 0 ? price : price.toFixed(2)}</div>`
+      : '';
+    return `
     <div class="bottle-card ${b.type || ''}" onclick="openBottle(${b.id})">
+      ${priceLabel}
       <div class="bottle-name">${b.name || 'Unnamed Wine'}</div>
       <div class="bottle-producer">${b.producer || '—'}</div>
       <div class="bottle-meta">
@@ -1428,10 +1475,10 @@ function renderCollection() {
       </div>
       <div class="bottle-footer">
         <span class="bottle-location">${getLocationStr(b)}</span>
-        <span>${b.score ? `<span class="bottle-rating">${b.score}</span>` : ''}${b.marketValue ? `<span class="bottle-price">$${b.marketValue}</span>` : ''}</span>
+        <span>${b.score ? `<span class="bottle-rating">${b.score}</span>` : ''}</span>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 
 function getLocationStr(b) {
@@ -2052,7 +2099,7 @@ function showLabelReview(parsed, rawText) {
   const panel = document.createElement('div');
   panel.id = 'label-review-panel';
   panel.style.cssText = `
-    position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:400;
+    position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:400;
     display:flex;align-items:flex-end;justify-content:center;
   `;
 
@@ -2253,7 +2300,7 @@ async function showPhotoQueueResults() {
   const overlay = document.createElement('div');
   overlay.id = 'pq-modal';
   overlay.style.cssText = `
-    position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:400;
+    position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:400;
     display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;
   `;
 

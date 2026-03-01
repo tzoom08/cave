@@ -1,12 +1,18 @@
 {
   "version": "1.2.4",
-  "exportedAt": "2026-03-01T01:01:30.929Z",
+  "exportedAt": "2026-03-01T01:03:34.640Z",
   "racks": [
     {
       "id": 1,
-      "name": "Main Rack",
-      "rows": 6,
-      "cols": 12
+      "name": "Credenza",
+      "rows": 2,
+      "cols": 4
+    },
+    {
+      "name": "Basement Left",
+      "rows": 7,
+      "cols": 4,
+      "id": 2
     }
   ],
   "bottles": [

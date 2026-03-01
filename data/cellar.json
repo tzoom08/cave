@@ -1,6 +1,6 @@
 {
   "version": "1.2.4",
-  "exportedAt": "2026-03-01T01:05:09.826Z",
+  "exportedAt": "2026-03-01T01:05:23.703Z",
   "racks": [
     {
       "id": 1,
@@ -17,7 +17,7 @@
   ],
   "bottles": [
     {
-      "addedAt": "2026-02-28T23:18:02.501Z",
+      "addedAt": "2026-03-01T01:05:23.693Z",
       "synced": false,
       "name": "Pungirosa",
       "producer": "CASTEL DEL MONTE",
@@ -27,10 +27,18 @@
       "region": "Castel del Monte",
       "country": "Italy",
       "quantity": 1,
-      "rack": 2,
+      "rack": 1,
       "row": 1,
       "col": 3,
-      "id": 1
+      "id": 1,
+      "purchasePrice": null,
+      "marketValue": null,
+      "drinkBy": "",
+      "priceTier": null,
+      "score": null,
+      "critic": "",
+      "notes": "",
+      "personal": ""
     },
     {
       "addedAt": "2026-03-01T01:04:47.217Z",

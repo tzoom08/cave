@@ -1,6 +1,6 @@
 {
   "version": "1.2.4",
-  "exportedAt": "2026-03-01T01:04:00.332Z",
+  "exportedAt": "2026-03-01T01:04:47.231Z",
   "racks": [
     {
       "id": 1,
@@ -33,7 +33,7 @@
       "id": 1
     },
     {
-      "addedAt": "2026-02-28T23:20:40.511Z",
+      "addedAt": "2026-03-01T01:04:47.217Z",
       "synced": false,
       "name": "TXAK OLINA",
       "producer": "gaintza",
@@ -41,10 +41,20 @@
       "type": "white",
       "country": "Spain",
       "quantity": 1,
-      "rack": 2,
+      "rack": 1,
       "row": 1,
       "col": 2,
-      "id": 2
+      "id": 2,
+      "varietal": "",
+      "region": "",
+      "purchasePrice": null,
+      "marketValue": null,
+      "drinkBy": "",
+      "priceTier": "$",
+      "score": null,
+      "critic": "",
+      "notes": "",
+      "personal": ""
     },
     {
       "addedAt": "2026-03-01T01:04:00.317Z",

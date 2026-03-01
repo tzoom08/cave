@@ -1,101 +1,13 @@
 {
   "version": "1.2.0",
-  "exportedAt": "2026-03-01T00:46:09.044Z",
+  "exportedAt": "2026-03-01T00:47:50.757Z",
   "racks": [
     {
-      "name": "Basement Left",
-      "rows": 7,
-      "cols": 4,
+      "name": "Main Rack",
+      "rows": 6,
+      "cols": 12,
       "id": 1
-    },
-    {
-      "name": "TV Credenza",
-      "rows": 2,
-      "cols": 4,
-      "id": 2
     }
   ],
-  "bottles": [
-    {
-      "addedAt": "2026-02-28T23:18:02.501Z",
-      "synced": false,
-      "name": "Pungirosa",
-      "producer": "CASTEL DEL MONTE",
-      "vintage": 2024,
-      "type": "rosé",
-      "varietal": "Bombino Nero",
-      "region": "Castel del Monte",
-      "country": "Italy",
-      "quantity": 1,
-      "rack": 2,
-      "row": 1,
-      "col": 3,
-      "id": 9
-    },
-    {
-      "addedAt": "2026-02-28T23:20:40.511Z",
-      "synced": false,
-      "name": "TXAK OLINA",
-      "producer": "gaintza",
-      "vintage": 2024,
-      "type": "white",
-      "country": "Spain",
-      "quantity": 1,
-      "rack": 2,
-      "row": 1,
-      "col": 2,
-      "id": 10
-    },
-    {
-      "addedAt": "2026-02-28T23:22:14.315Z",
-      "synced": false,
-      "name": "Le Ciel Serein",
-      "producer": "Domaine Carneros",
-      "vintage": 2022,
-      "type": "red",
-      "varietal": "Pinot Noir",
-      "country": "USA",
-      "quantity": 1,
-      "rack": 2,
-      "row": 1,
-      "col": 4,
-      "id": 11
-    },
-    {
-      "addedAt": "2026-02-28",
-      "synced": false,
-      "name": "Soter Pinot",
-      "producer": "Soter Vineyards",
-      "vintage": 2024,
-      "type": "red",
-      "varietal": "Pinot Noir",
-      "region": "Oregon",
-      "country": "USA",
-      "quantity": 1,
-      "id": 12
-    },
-    {
-      "addedAt": "2026-03-01T00:41:49.471Z",
-      "synced": false,
-      "name": "Soter Pinot",
-      "producer": "Soter Vineyards",
-      "vintage": 2024,
-      "type": "red",
-      "varietal": "Pinot Noir",
-      "region": "Oregon",
-      "country": "USA",
-      "quantity": 1,
-      "id": 13,
-      "purchasePrice": 60,
-      "marketValue": 55,
-      "drinkBy": "",
-      "rack": 1,
-      "row": null,
-      "col": null,
-      "score": null,
-      "critic": "",
-      "notes": "",
-      "personal": ""
-    }
-  ]
+  "bottles": []
 }

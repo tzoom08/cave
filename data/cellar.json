@@ -1,13 +1,85 @@
 {
-  "version": "1.2.0",
-  "exportedAt": "2026-03-01T00:47:50.757Z",
+  "version": "1.2.4",
+  "exportedAt": "2026-03-01T01:01:00.674Z",
   "racks": [
     {
+      "id": 1,
       "name": "Main Rack",
       "rows": 6,
-      "cols": 12,
-      "id": 1
+      "cols": 12
     }
   ],
-  "bottles": []
+  "bottles": [
+    {
+      "addedAt": "2026-02-28T23:18:02.501Z",
+      "synced": false,
+      "name": "Pungirosa",
+      "producer": "CASTEL DEL MONTE",
+      "vintage": 2024,
+      "type": "rosé",
+      "varietal": "Bombino Nero",
+      "region": "Castel del Monte",
+      "country": "Italy",
+      "quantity": 1,
+      "rack": 2,
+      "row": 1,
+      "col": 3,
+      "id": 1
+    },
+    {
+      "addedAt": "2026-02-28T23:20:40.511Z",
+      "synced": false,
+      "name": "TXAK OLINA",
+      "producer": "gaintza",
+      "vintage": 2024,
+      "type": "white",
+      "country": "Spain",
+      "quantity": 1,
+      "rack": 2,
+      "row": 1,
+      "col": 2,
+      "id": 2
+    },
+    {
+      "addedAt": "2026-02-28T23:22:14.315Z",
+      "synced": false,
+      "name": "Le Ciel Serein",
+      "producer": "Domaine Carneros",
+      "vintage": 2022,
+      "type": "red",
+      "varietal": "Pinot Noir",
+      "country": "USA",
+      "quantity": 1,
+      "rack": 2,
+      "row": 1,
+      "col": 4,
+      "id": 3
+    },
+    {
+      "addedAt": "2026-02-28",
+      "synced": false,
+      "name": "Soter Pinot",
+      "producer": "Soter Vineyards",
+      "vintage": 2024,
+      "type": "red",
+      "varietal": "Pinot Noir",
+      "region": "Oregon",
+      "country": "USA",
+      "quantity": 1,
+      "id": 4
+    },
+    {
+      "addedAt": "2026-02-28",
+      "synced": false,
+      "name": "Soter Pinot",
+      "producer": "Soter Vineyards",
+      "vintage": 2024,
+      "type": "red",
+      "varietal": "Pinot Noir",
+      "region": "Oregon",
+      "country": "USA",
+      "quantity": 1,
+      "id": 5
+    }
+  ]
 }

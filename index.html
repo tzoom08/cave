@@ -550,6 +550,17 @@
     right: 3px;
     letter-spacing: 0;
   }
+  .rack-slot-tier {
+    font-family: var(--font-mono);
+    font-size: 7px;
+    color: var(--text-muted);
+    opacity: 0.55;
+    position: absolute;
+    bottom: 2px;
+    left: 3px;
+    letter-spacing: -0.5px;
+    line-height: 1;
+  }
   .rack-slot-dot {
     width: 8px; height: 8px;
     border-radius: 50%;
@@ -821,8 +832,16 @@
     <div class="bottle-grid" id="bottle-grid"></div>
     <div id="empty-collection" class="empty-state" style="display:none">
       <span class="es-icon">🍷</span>
-      <h3>Your cellar awaits</h3>
-      <p>Add your first bottle to begin tracking<br>your collection.</p>
+      <h3 id="empty-title">Your cellar awaits</h3>
+      <p id="empty-body">Add your first bottle to begin<br>tracking your collection.</p>
+      <div id="empty-github-prompt" style="display:none;margin-top:16px">
+        <button class="btn btn-primary" onclick="openGithubSetup()" style="font-size:11px;padding:8px 20px">
+          Connect GitHub to restore your data
+        </button>
+        <p style="margin-top:10px;font-size:10px;color:var(--text-muted)">
+          Already set up on another device?<br>Connect GitHub and pull your collection.
+        </p>
+      </div>
     </div>
   </div>
 
@@ -946,6 +965,18 @@
         <div class="field">
           <label>Quantity</label>
           <input type="number" id="f-quantity" placeholder="1" min="1" value="1">
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top:10px">
+        <div class="field">
+          <label>Price Tier</label>
+          <select id="f-price-tier">
+            <option value="">— select —</option>
+            <option value="$">$ · Everyday</option>
+            <option value="$$">$$ · Mid-range</option>
+            <option value="$$$">$$$ · Premium</option>
+            <option value="$$$$">$$$$ · Prestige</option>
+          </select>
         </div>
       </div>
       <div class="grid-2">
@@ -1206,7 +1237,11 @@
           <button class="btn btn-sm" onclick="githubPull()">↓ Pull from GitHub</button>
           <button class="btn btn-sm" style="margin-left:auto;border-color:var(--wine);color:var(--wine-light)" onclick="disconnectGithub()">Disconnect</button>
         </div>
-        <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);font-size:10px;color:var(--text-muted);line-height:1.7">
+        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px">
+          <button class="btn btn-sm" onclick="checkForAppUpdate(this)" style="width:100%">⟳ Check for App Updates</button>
+        </div>
+        <div id="update-check-status" style="display:none;margin-top:8px;font-size:10px;color:var(--text-muted);letter-spacing:0.06em"></div>
+        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:10px;color:var(--text-muted);line-height:1.7">
           Auto-sync is <strong style="color:var(--cream-dim)">on</strong> — every add, edit, or delete pushes to GitHub automatically when online. Pull manually if you've edited <code style="color:var(--gold)">cellar.json</code> directly.
         </div>
       </div>
@@ -1245,7 +1280,7 @@ db.version(4).stores({
 // ===========================
 // VERSION
 // ===========================
-const APP_VERSION = '1.2.0';
+const APP_VERSION = '1.2.4';
 
 // ===========================
 // STATE
@@ -1452,8 +1487,16 @@ function renderCollection() {
   if (filtered.length === 0) {
     grid.innerHTML = '';
     empty.style.display = 'block';
+    // If no bottles AND no GitHub config, nudge them to connect
+    const prompt = document.getElementById('empty-github-prompt');
+    if (prompt) {
+      const hasConfig = !!ghConfig;
+      const hasBottles = bottles.length > 0;
+      prompt.style.display = (!hasConfig && !hasBottles) ? 'block' : 'none';
+    }
     return;
   }
+  document.getElementById('empty-github-prompt').style.display = 'none';
   empty.style.display = 'none';
 
   grid.innerHTML = filtered.map(b => {
@@ -1581,6 +1624,7 @@ function populateForm(b) {
   document.getElementById('f-market-value').value = b.marketValue || '';
   document.getElementById('f-quantity').value = b.quantity || 1;
   document.getElementById('f-drink-by').value = b.drinkBy || '';
+  document.getElementById('f-price-tier').value = b.priceTier || '';
   document.getElementById('f-score').value = b.score || '';
   document.getElementById('f-critic').value = b.critic || '';
   document.getElementById('f-notes').value = b.notes || '';
@@ -1610,6 +1654,7 @@ async function addBottle() {
     marketValue: parseFloat(document.getElementById('f-market-value').value) || null,
     quantity: parseInt(document.getElementById('f-quantity').value) || 1,
     drinkBy: document.getElementById('f-drink-by').value.trim(),
+    priceTier: document.getElementById('f-price-tier').value || null,
     rack: parseInt(document.getElementById('f-rack').value) || null,
     row: parseInt(document.getElementById('f-row').value) || null,
     col: parseInt(document.getElementById('f-col').value) || null,
@@ -1649,6 +1694,7 @@ function clearForm() {
    'f-purchase-price','f-market-value','f-drink-by','f-score','f-critic','f-notes','f-personal',
    'f-row','f-col'].forEach(id => { document.getElementById(id).value = ''; });
   document.getElementById('f-quantity').value = 1;
+  document.getElementById('f-price-tier').value = '';
   document.getElementById('f-type').value = 'red';
   document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
   delete document.getElementById('f-name').dataset.editId;
@@ -2466,7 +2512,8 @@ function renderCellar() {
       const b = slotMap[key];
       const slot = document.createElement('div');
       slot.className = `rack-slot${b ? ' occupied ' + (b.type || '') : ''}`;
-      slot.innerHTML = `<div class="rack-slot-dot"></div>`;
+      const tierHtml = (b && b.priceTier) ? `<div class="rack-slot-tier">${b.priceTier}</div>` : '';
+      slot.innerHTML = `<div class="rack-slot-dot"></div>${tierHtml}`;
       slot.dataset.row = r;
       slot.dataset.col = c;
       if (b) {
@@ -2680,8 +2727,14 @@ async function saveGithubConfig() {
   closeModal('github-modal');
   toast('GitHub connected ✓', 'success');
 
-  // Push current local data immediately
-  await githubPush({ silent: false });
+  // If we have local bottles, push them — otherwise pull (fresh install)
+  const localCount = await db.bottles.count();
+  if (localCount > 0) {
+    await githubPush({ silent: false });
+  } else {
+    toast('No local data — pulling from GitHub…');
+    await githubPull({ silent: false });
+  }
 }
 
 function updateGithubModalUI() {
@@ -2835,16 +2888,19 @@ async function githubPull({ silent = false } = {}) {
 
     await loadBottles();
     updateSyncStatus();
+    renderCollection();
+    renderStats();
+    renderCellar();
 
     if (!silent) {
-      renderCollection();
-      renderStats();
-      toast(`Pulled from GitHub ✓ (${json.bottles?.length || 0} bottles)`, 'success');
+      toast(`Pulled from GitHub ✓ — ${json.bottles?.length || 0} bottle${json.bottles?.length !== 1 ? 's' : ''} loaded`, 'success');
     }
   } catch(e) {
     console.error('GitHub pull error:', e);
     await loadBottles();
     updateSyncStatus();
+    renderCollection();
+    renderStats();
     if (!silent) toast('GitHub pull failed: ' + e.message, 'error');
   }
 }
@@ -2867,6 +2923,7 @@ const CSV_FIELDS = [
   { key: 'score',         label: 'Score' },
   { key: 'critic',        label: 'Critic' },
   { key: 'drinkBy',       label: 'Drink By' },
+  { key: 'priceTier',     label: 'Price Tier' },
   { key: 'rack',          label: 'Rack ID' },
   { key: 'row',           label: 'Row' },
   { key: 'col',           label: 'Col' },
@@ -3134,6 +3191,68 @@ function applyUpdate() {
   if (btn) btn.textContent = 'Updating…';
   if (window._pendingSW) {
     window._pendingSW.postMessage({ type: 'SKIP_WAITING' });
+  }
+}
+
+async function checkForAppUpdate(btn) {
+  const statusEl = document.getElementById('update-check-status');
+  const originalText = btn.textContent;
+  btn.textContent = 'Checking…';
+  btn.disabled = true;
+  if (statusEl) { statusEl.style.display = 'none'; statusEl.textContent = ''; }
+
+  // If there's already a pending SW waiting, just show the banner
+  if (window._pendingSW) {
+    btn.textContent = originalText;
+    btn.disabled = false;
+    showUpdatePrompt(window._pendingSW);
+    closeModal('github-modal');
+    return;
+  }
+
+  try {
+    const reg = await navigator.serviceWorker.getRegistration('./');
+    if (!reg) {
+      btn.textContent = originalText;
+      btn.disabled = false;
+      if (statusEl) { statusEl.style.display = 'block'; statusEl.textContent = 'Service worker not registered.'; }
+      return;
+    }
+
+    // Force a network check for a new SW
+    await reg.update();
+
+    // Give it a moment to detect and install
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    btn.textContent = originalText;
+    btn.disabled = false;
+
+    if (reg.waiting) {
+      // New SW already waiting — show update prompt
+      showUpdatePrompt(reg.waiting);
+      closeModal('github-modal');
+    } else if (reg.installing) {
+      // Still downloading — wait for it
+      if (statusEl) { statusEl.style.display = 'block'; statusEl.textContent = 'Downloading update…'; }
+      reg.installing.addEventListener('statechange', function() {
+        if (this.state === 'installed' && navigator.serviceWorker.controller) {
+          showUpdatePrompt(this);
+          closeModal('github-modal');
+        }
+      });
+    } else {
+      // Already on latest
+      if (statusEl) {
+        statusEl.style.display = 'block';
+        statusEl.textContent = `✓ You're on the latest version (v${APP_VERSION})`;
+        statusEl.style.color = 'var(--green)';
+      }
+    }
+  } catch(e) {
+    btn.textContent = originalText;
+    btn.disabled = false;
+    if (statusEl) { statusEl.style.display = 'block'; statusEl.textContent = 'Update check failed — check your connection.'; }
   }
 }
 

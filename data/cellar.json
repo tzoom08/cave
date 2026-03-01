@@ -1,6 +1,6 @@
 {
   "version": "1.2.4",
-  "exportedAt": "2026-03-01T01:04:47.231Z",
+  "exportedAt": "2026-03-01T01:05:09.826Z",
   "racks": [
     {
       "id": 1,
@@ -57,7 +57,7 @@
       "personal": ""
     },
     {
-      "addedAt": "2026-03-01T01:04:00.317Z",
+      "addedAt": "2026-03-01T01:05:09.814Z",
       "synced": false,
       "name": "Le Ciel Serein",
       "producer": "Domaine Carneros",
@@ -74,7 +74,7 @@
       "purchasePrice": null,
       "marketValue": null,
       "drinkBy": "",
-      "priceTier": "$$$",
+      "priceTier": "$",
       "score": null,
       "critic": "",
       "notes": "",

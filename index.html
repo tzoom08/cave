@@ -552,9 +552,9 @@
   }
   .rack-slot-tier {
     font-family: var(--font-mono);
-    font-size: 7px;
-    color: var(--text-muted);
-    opacity: 0.55;
+    font-size: 10px;
+    color: var(--text-dim);
+    opacity: 0.8;
     position: absolute;
     bottom: 2px;
     left: 3px;
@@ -1280,7 +1280,7 @@ db.version(4).stores({
 // ===========================
 // VERSION
 // ===========================
-const APP_VERSION = '1.2.4';
+const APP_VERSION = '1.2.5';
 
 // ===========================
 // STATE
@@ -1517,7 +1517,10 @@ function renderCollection() {
         ${b.varietal ? `<span class="tag varietal">${b.varietal}</span>` : ''}
       </div>
       <div class="bottle-footer">
-        <span class="bottle-location">${getLocationStr(b)}</span>
+        <span style="display:flex;align-items:center;gap:6px">
+          ${b.priceTier ? `<span style="font-family:var(--font-mono);font-size:10px;color:var(--text-dim);letter-spacing:-0.5px">${b.priceTier}</span>` : ''}
+          <span class="bottle-location">${getLocationStr(b)}</span>
+        </span>
         <span>${b.score ? `<span class="bottle-rating">${b.score}</span>` : ''}</span>
       </div>
     </div>`;

@@ -1,6 +1,6 @@
 {
   "version": "1.2.5",
-  "exportedAt": "2026-03-01T01:51:35.298Z",
+  "exportedAt": "2026-03-26T15:55:05.542Z",
   "racks": [
     {
       "id": 1,
@@ -23,6 +23,7 @@
   ],
   "bottles": [
     {
+      "id": 19,
       "addedAt": "2026-03-01T01:05:47.964Z",
       "synced": false,
       "name": "Pungirosa",
@@ -36,10 +37,10 @@
       "priceTier": "$",
       "rack": 1,
       "row": 1,
-      "col": 3,
-      "id": 19
+      "col": 3
     },
     {
+      "id": 20,
       "addedAt": "2026-03-01T01:04:47.217Z",
       "synced": false,
       "name": "TXAK OLINA",
@@ -51,10 +52,10 @@
       "priceTier": "$",
       "rack": 1,
       "row": 1,
-      "col": 2,
-      "id": 20
+      "col": 2
     },
     {
+      "id": 21,
       "addedAt": "2026-03-01T01:05:09.814Z",
       "synced": false,
       "name": "Le Ciel Serein",
@@ -67,10 +68,10 @@
       "priceTier": "$",
       "rack": 1,
       "row": 1,
-      "col": 4,
-      "id": 21
+      "col": 4
     },
     {
+      "id": 22,
       "addedAt": "2026-02-28",
       "synced": false,
       "name": "Soter Pinot",
@@ -86,10 +87,10 @@
       "priceTier": "$$",
       "rack": 2,
       "row": 3,
-      "col": 1,
-      "id": 22
+      "col": 1
     },
     {
+      "id": 23,
       "addedAt": "2026-02-28",
       "synced": false,
       "name": "Soter Pinot",
@@ -105,10 +106,10 @@
       "priceTier": "$$",
       "rack": 2,
       "row": 3,
-      "col": 4,
-      "id": 23
+      "col": 4
     },
     {
+      "id": 24,
       "addedAt": "2026-02-28",
       "synced": false,
       "name": "Brenner Chardonnay",
@@ -125,10 +126,10 @@
       "rack": 2,
       "row": 2,
       "col": 1,
-      "personal": "With Chris and Andy",
-      "id": 24
+      "personal": "With Chris and Andy"
     },
     {
+      "id": 25,
       "addedAt": "2026-02-28",
       "synced": false,
       "name": "Soter Brut Rose",
@@ -144,10 +145,10 @@
       "priceTier": "$$$",
       "rack": 2,
       "row": 2,
-      "col": 2,
-      "id": 25
+      "col": 2
     },
     {
+      "id": 26,
       "addedAt": "2026-02-28",
       "synced": false,
       "name": "Coursey Graves Chardonnay",
@@ -161,10 +162,10 @@
       "priceTier": "$$",
       "rack": 2,
       "row": 1,
-      "col": 3,
-      "id": 26
+      "col": 3
     },
     {
+      "id": 27,
       "addedAt": "2026-02-28",
       "synced": false,
       "name": "Aperature Sauv Blanc",
@@ -178,10 +179,10 @@
       "priceTier": "$$",
       "rack": 2,
       "row": 2,
-      "col": 3,
-      "id": 27
+      "col": 3
     },
     {
+      "id": 28,
       "addedAt": "2026-02-28",
       "synced": false,
       "name": "Aperature Chenin Blanc",
@@ -195,10 +196,10 @@
       "priceTier": "$$",
       "rack": 2,
       "row": 2,
-      "col": 4,
-      "id": 28
+      "col": 4
     },
     {
+      "id": 29,
       "addedAt": "2026-02-28",
       "synced": false,
       "name": "Domaine Carneros Blanc de Noir",
@@ -212,10 +213,10 @@
       "priceTier": "$$$",
       "rack": 2,
       "row": 3,
-      "col": 2,
-      "id": 29
+      "col": 2
     },
     {
+      "id": 30,
       "addedAt": "2026-02-28",
       "synced": false,
       "name": "Soter Brut Rose",
@@ -231,10 +232,10 @@
       "priceTier": "$$$",
       "rack": 2,
       "row": 3,
-      "col": 3,
-      "id": 30
+      "col": 3
     },
     {
+      "id": 31,
       "addedAt": "2026-02-28",
       "synced": false,
       "name": "Works & Days Pinot",
@@ -248,10 +249,10 @@
       "priceTier": "$",
       "rack": 2,
       "row": 4,
-      "col": 1,
-      "id": 31
+      "col": 1
     },
     {
+      "id": 32,
       "addedAt": "2026-02-28",
       "synced": false,
       "name": "Paolo Scavino Sorriso",
@@ -265,10 +266,10 @@
       "priceTier": "$",
       "rack": 2,
       "row": 4,
-      "col": 2,
-      "id": 32
+      "col": 2
     },
     {
+      "id": 33,
       "addedAt": "2026-02-28",
       "synced": false,
       "name": "Soter Origin Pinot",
@@ -284,10 +285,10 @@
       "priceTier": "$$$",
       "rack": 2,
       "row": 4,
-      "col": 3,
-      "id": 33
+      "col": 3
     },
     {
+      "id": 34,
       "addedAt": "2026-02-28",
       "synced": false,
       "name": "La Sirena Rosato",
@@ -301,8 +302,7 @@
       "priceTier": "$$",
       "rack": 2,
       "row": 4,
-      "col": 4,
-      "id": 34
+      "col": 4
     }
   ]
 }

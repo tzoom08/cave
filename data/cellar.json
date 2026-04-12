@@ -1,6 +1,6 @@
 {
   "version": "1.4.1",
-  "exportedAt": "2026-04-12T20:12:35.178Z",
+  "exportedAt": "2026-04-12T20:13:28.878Z",
   "racks": [
     {
       "id": 1,
@@ -913,13 +913,22 @@
       "type": "white",
       "priceTier": "$$$",
       "purchasePrice": null,
-      "personal": null,
-      "rack": null,
+      "personal": "",
+      "rack": 1,
       "row": null,
       "col": null,
       "synced": false,
-      "addedAt": "2026-04-12T20:12:35.138Z",
-      "id": 87
+      "addedAt": "2026-04-12T20:13:28.857Z",
+      "id": 87,
+      "varietal": "Chardonnay",
+      "region": "Oregon",
+      "country": "USA",
+      "marketValue": null,
+      "quantity": 1,
+      "drinkBy": "",
+      "score": null,
+      "critic": "",
+      "notes": ""
     }
   ],
   "departed": [

@@ -1362,7 +1362,7 @@ db.version(5).stores({
 // ===========================
 // VERSION
 // ===========================
-const APP_VERSION = '1.4.3';
+const APP_VERSION = '1.4.4';
 
 // ===========================
 // STATE
@@ -3217,18 +3217,53 @@ async function exportCsv() {
   const allBottles = await db.bottles.toArray();
   if (allBottles.length === 0) { toast('No bottles to export', 'error'); return; }
 
-  // Build header row — include rack name as a friendly column alongside Rack ID
-  const headers = [...CSV_FIELDS.map(f => f.label), 'Rack Name'];
   const allRacks = await db.racks.toArray();
   const rackMap = {};
   allRacks.forEach(r => rackMap[r.id] = r.name);
 
-  const rows = allBottles.map(b => {
-    const vals = CSV_FIELDS.map(f => csvEscape(b[f.key]));
-    vals.push(csvEscape(b.rack ? (rackMap[b.rack] || '') : ''));
-    return vals.join(',');
+  // Split into assigned (unique slot, 1 row each) and unassigned (group by identity)
+  const assigned = allBottles.filter(b => b.rack && b.row && b.col);
+
+  // Group unassigned by key fields — each group becomes one row with real Quantity
+  const unassignedGroups = {};
+  allBottles.filter(b => !b.rack || !b.row || !b.col).forEach(b => {
+    const key = [b.name, b.producer, b.vintage, b.type, b.varietal,
+                 b.region, b.country, b.purchasePrice, b.priceTier, b.personal].join('|');
+    if (!unassignedGroups[key]) {
+      unassignedGroups[key] = { b: { ...b }, count: 0 };
+    }
+    unassignedGroups[key].count++;
   });
 
+  // Build header — same CSV_FIELDS but Quantity now reflects real count
+  const headers = [...CSV_FIELDS.map(f => f.label), 'Rack Name', 'Assigned'];
+
+  const rows = [];
+
+  // Assigned bottles — one row each, Quantity=1 (each is a distinct slot)
+  assigned.forEach(b => {
+    const vals = CSV_FIELDS.map(f => {
+      if (f.key === 'quantity') return csvEscape(1);
+      return csvEscape(b[f.key]);
+    });
+    vals.push(csvEscape(rackMap[b.rack] || ''));
+    vals.push('Yes');
+    rows.push(vals.join(','));
+  });
+
+  // Unassigned groups — one row per group, Quantity = actual count
+  Object.values(unassignedGroups).forEach(({ b, count }) => {
+    const vals = CSV_FIELDS.map(f => {
+      if (f.key === 'quantity') return csvEscape(count);
+      if (f.key === 'rack' || f.key === 'row' || f.key === 'col') return '';
+      return csvEscape(b[f.key]);
+    });
+    vals.push(''); // Rack Name — empty for unassigned
+    vals.push('No');
+    rows.push(vals.join(','));
+  });
+
+  const totalBottles = assigned.length + Object.values(unassignedGroups).reduce((s, g) => s + g.count, 0);
   const csv = [headers.join(','), ...rows].join('\r\n');
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
@@ -3237,7 +3272,7 @@ async function exportCsv() {
   a.download = `cave-cellar-${new Date().toISOString().split('T')[0]}.csv`;
   a.click();
   URL.revokeObjectURL(url);
-  toast(`Exported ${allBottles.length} bottles ✓`, 'success');
+  toast(`Exported ${totalBottles} bottles (${rows.length} rows) ✓`, 'success');
 }
 
 async function handleCsvImport(input) {

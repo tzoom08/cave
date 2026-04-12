@@ -1382,7 +1382,7 @@ db.version(5).stores({
 // ===========================
 // VERSION
 // ===========================
-const APP_VERSION = '1.3.0';
+const APP_VERSION = '1.3.1';
 
 // ===========================
 // STATE
@@ -1682,8 +1682,17 @@ async function openBottle(id) {
   else notesWrap.style.display = 'none';
 
   const personalWrap = document.getElementById('m-personal-wrap');
-  if (b.personal) { personalWrap.style.display = 'block'; document.getElementById('m-personal').textContent = b.personal; }
-  else personalWrap.style.display = 'none';
+  personalWrap.style.display = 'block';
+  const personalEl = document.getElementById('m-personal');
+  if (b.personal) {
+    personalEl.textContent = b.personal;
+    personalEl.style.color = '';
+    personalEl.style.fontStyle = 'normal';
+  } else {
+    personalEl.textContent = 'No personal notes — tap Edit to add some.';
+    personalEl.style.color = 'var(--text-muted)';
+    personalEl.style.fontStyle = 'italic';
+  }
 
   const syncEl = document.getElementById('m-sync-status');
   if (b.synced) syncEl.textContent = '✓ Data synced from open sources';

@@ -1,6 +1,6 @@
 {
   "version": "1.3.0",
-  "exportedAt": "2026-04-12T04:39:03.335Z",
+  "exportedAt": "2026-04-12T04:41:29.152Z",
   "racks": [
     {
       "id": 1,
@@ -38,21 +38,6 @@
       "row": 1,
       "col": 3,
       "id": 35
-    },
-    {
-      "addedAt": "2026-03-01T01:04:47.217Z",
-      "synced": false,
-      "name": "TXAK OLINA",
-      "producer": "gaintza",
-      "vintage": 2024,
-      "type": "white",
-      "country": "Spain",
-      "quantity": 1,
-      "priceTier": "$",
-      "rack": 1,
-      "row": 1,
-      "col": 2,
-      "id": 36
     },
     {
       "addedAt": "2026-03-01T01:05:09.814Z",
@@ -893,5 +878,21 @@
       "id": 83
     }
   ],
-  "departed": []
+  "departed": [
+    {
+      "name": "TXAK OLINA",
+      "producer": "gaintza",
+      "vintage": 2024,
+      "type": "white",
+      "country": "Spain",
+      "priceTier": "$",
+      "reason": "Consumed",
+      "departedAt": "2026-04-05",
+      "score": null,
+      "critic": "",
+      "notes": "",
+      "addedAt": "2026-03-01T01:04:47.217Z",
+      "id": 1
+    }
+  ]
 }

@@ -803,7 +803,7 @@
     <div class="logo">cave <span>wine cellar &nbsp;·&nbsp; <span id="app-version">v1.0.0</span></span></div>
   </div>
   <div class="header-actions">
-    <button class="btn btn-sm btn-icon" onclick="openGithubSetup()" id="github-btn" title="GitHub Sync" style="font-size:15px;border-color:transparent;background:none;color:var(--text-muted)">⇅</button>
+    <button class="btn btn-sm btn-icon" onclick="openGithubSetup()" id="github-btn" title="Settings" style="font-size:15px;border-color:transparent;background:none;color:var(--text-muted)">⇅</button>
     <div class="sync-indicator">
       <div class="sync-dot" id="sync-dot"></div>
       <span id="sync-label">OFFLINE</span>
@@ -1091,15 +1091,8 @@
 
   <!-- STATS -->
   <div class="view" id="view-stats">
-    <!-- Hidden CSV upload input -->
-    <input type="file" id="csv-import-input" accept=".csv" style="display:none" onchange="handleCsvImport(this)">
-
     <div class="section-header">
       <div class="section-title">Statistics</div>
-      <div style="display:flex;gap:8px">
-        <button class="btn btn-sm" onclick="exportCsv()">↓ Export CSV</button>
-        <button class="btn btn-sm btn-gold" onclick="document.getElementById('csv-import-input').click()">↑ Import CSV</button>
-      </div>
     </div>
 
     <div class="grid-3" style="margin-bottom:20px">
@@ -1220,8 +1213,8 @@
   <div class="modal">
     <div class="modal-header">
       <div>
-        <div class="modal-wine-name">GitHub Sync</div>
-        <div class="modal-producer">Store your cellar data in your repository</div>
+        <div class="modal-wine-name">Settings</div>
+        <div class="modal-producer">Sync, data, and app preferences</div>
       </div>
       <button class="btn btn-sm btn-icon" onclick="closeModal('github-modal')">✕</button>
     </div>
@@ -1269,6 +1262,18 @@
         <div id="update-check-status" style="display:none;margin-top:8px;font-size:10px;color:var(--text-muted);letter-spacing:0.06em"></div>
         <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:10px;color:var(--text-muted);line-height:1.7">
           Auto-sync is <strong style="color:var(--cream-dim)">on</strong> — every add, edit, or delete pushes to GitHub automatically when online. Pull manually if you've edited <code style="color:var(--gold)">cellar.json</code> directly.
+        </div>
+      </div>
+
+      <!-- CSV section — always visible regardless of GitHub connection state -->
+      <div style="margin-top:16px;padding-top:16px;border-top:2px solid var(--border)">
+        <div style="font-size:9px;letter-spacing:0.15em;color:var(--text-muted);text-transform:uppercase;margin-bottom:10px">Data / CSV</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-sm" onclick="exportCsv();closeModal('github-modal')" style="flex:1">↓ Export CSV</button>
+          <button class="btn btn-sm btn-gold" onclick="closeModal('github-modal');setTimeout(()=>document.getElementById('csv-import-input').click(),100)" style="flex:1">↑ Import CSV</button>
+        </div>
+        <div style="margin-top:8px;font-size:10px;color:var(--text-muted);line-height:1.6">
+          Export includes active cellar, unassigned, and full departure history. Import merges or replaces your active collection.
         </div>
       </div>
     </div>
@@ -1323,6 +1328,9 @@
 
 <!-- HISTORY VIEW (inside <main>) is injected via JS -->
 
+<!-- Hidden CSV upload input (global) -->
+<input type="file" id="csv-import-input" accept=".csv" style="display:none" onchange="handleCsvImport(this)">
+
 <!-- Toast container -->
 <div class="toast-container" id="toast-container"></div>
 
@@ -1362,7 +1370,7 @@ db.version(5).stores({
 // ===========================
 // VERSION
 // ===========================
-const APP_VERSION = '1.4.4';
+const APP_VERSION = '1.5.0';
 
 // ===========================
 // STATE
@@ -3263,7 +3271,27 @@ async function exportCsv() {
     rows.push(vals.join(','));
   });
 
-  const totalBottles = assigned.length + Object.values(unassignedGroups).reduce((s, g) => s + g.count, 0);
+  // ── Departed history ──
+  const allDeparted = await db.departed.toArray();
+  const DEPARTED_FIELDS = [
+    'name','producer','vintage','type','varietal','region','country',
+    'purchasePrice','priceTier','reason','departedAt','score','critic','notes','addedAt'
+  ];
+
+  // Add a blank separator row then a header for the history section
+  if (allDeparted.length > 0) {
+    rows.push(''); // blank row
+    rows.push(DEPARTED_FIELDS.map(k => csvEscape(k === 'departedAt' ? 'Date Departed' :
+      k === 'addedAt' ? 'Date Added' :
+      k === 'purchasePrice' ? 'Purchase Price' :
+      k === 'priceTier' ? 'Price Tier' :
+      k.charAt(0).toUpperCase() + k.slice(1))).join(',') + ',,HISTORY'); // section marker
+    allDeparted.forEach(d => {
+      rows.push(DEPARTED_FIELDS.map(k => csvEscape(d[k])).join(','));
+    });
+  }
+
+  const totalActive = assigned.length + Object.values(unassignedGroups).reduce((s, g) => s + g.count, 0);
   const csv = [headers.join(','), ...rows].join('\r\n');
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
@@ -3272,7 +3300,10 @@ async function exportCsv() {
   a.download = `cave-cellar-${new Date().toISOString().split('T')[0]}.csv`;
   a.click();
   URL.revokeObjectURL(url);
-  toast(`Exported ${totalBottles} bottles (${rows.length} rows) ✓`, 'success');
+  const msg = allDeparted.length > 0
+    ? `Exported ${totalActive} active + ${allDeparted.length} history bottles ✓`
+    : `Exported ${totalActive} bottles ✓`;
+  toast(msg, 'success');
 }
 
 async function handleCsvImport(input) {

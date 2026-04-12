@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cave-v17';
+const CACHE_NAME = 'cave-v18';
 const ASSETS = ['/cave/', '/cave/index.html', '/cave/manifest.json', '/cave/sw.js'];
 
 self.addEventListener('install', e => {

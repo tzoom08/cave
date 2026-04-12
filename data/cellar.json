@@ -1,6 +1,6 @@
 {
   "version": "1.4.3",
-  "exportedAt": "2026-04-12T20:27:15.762Z",
+  "exportedAt": "2026-04-12T20:28:16.507Z",
   "racks": [
     {
       "id": 1,
@@ -938,6 +938,24 @@
       "score": null,
       "critic": "",
       "notes": ""
+    },
+    {
+      "name": "Soter Estates Pinot Noir",
+      "producer": "Soter Vineyards",
+      "vintage": 2024,
+      "type": "red",
+      "priceTier": "$$$",
+      "purchasePrice": 60,
+      "varietal": "Pinot Noir",
+      "region": "Oregon",
+      "country": "USA",
+      "personal": null,
+      "rack": null,
+      "row": null,
+      "col": null,
+      "synced": false,
+      "addedAt": "2026-04-12T20:28:16.462Z",
+      "id": 90
     }
   ],
   "departed": [

@@ -542,6 +542,16 @@
   .rack-slot.occupied.sparkling { background: rgba(128,128,196,0.2); border-color: #8080c4; }
   .rack-slot.occupied.orange { background: rgba(196,112,48,0.2); border-color: #c47030; }
   .rack-slot.selected { box-shadow: 0 0 0 2px var(--gold); }
+  .rack-slot.placement-target {
+    background: rgba(154,110,26,0.15) !important;
+    border-color: var(--gold) !important;
+    border-style: dashed !important;
+    animation: pulse-gold 1.2s ease-in-out infinite;
+  }
+  @keyframes pulse-gold {
+    0%, 100% { border-color: var(--gold); }
+    50% { border-color: var(--gold-light); box-shadow: 0 0 6px rgba(196,144,48,0.4); }
+  }
   .rack-slot-label {
     font-size: 7px;
     color: var(--text-muted);
@@ -1161,6 +1171,7 @@
         <button class="btn btn-sm btn-gold" onclick="syncBottle(currentBottleId)">↻ Fetch Data</button>
         <button class="btn btn-sm" onclick="editBottleModal(currentBottleId)">✏ Edit</button>
         <button class="btn btn-sm" onclick="openDepartureForm(currentBottleId)" style="border-color:var(--gold);color:var(--gold)">↗ Log Departure</button>
+        <button class="btn btn-sm" onclick="moveToUnassigned(currentBottleId)" style="border-color:var(--border-light);color:var(--text-dim)">↙ Unassign</button>
         <button class="btn btn-sm" style="margin-left:auto;border-color:var(--wine);color:var(--wine-light)" onclick="removeBottle(currentBottleId)">Remove</button>
       </div>
     </div>
@@ -1308,38 +1319,7 @@
   </div>
 </div>
 
-<!-- ASSIGN SLOT MODAL (for Unassigned bottles) -->
-<div class="modal-overlay" id="assign-slot-modal">
-  <div class="modal">
-    <div class="modal-header">
-      <div>
-        <div class="modal-wine-name" id="assign-bottle-name">Assign Location</div>
-        <div class="modal-producer">Choose a rack and slot</div>
-      </div>
-      <button class="btn btn-sm btn-icon" onclick="closeModal('assign-slot-modal')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="field">
-        <label>Rack</label>
-        <select id="assign-rack-select"></select>
-      </div>
-      <div class="grid-2">
-        <div class="field">
-          <label>Row</label>
-          <input type="number" id="assign-row" min="1" placeholder="1">
-        </div>
-        <div class="field">
-          <label>Col</label>
-          <input type="number" id="assign-col" min="1" placeholder="1">
-        </div>
-      </div>
-      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px">
-        <button class="btn btn-sm" onclick="closeModal('assign-slot-modal')">Cancel</button>
-        <button class="btn btn-sm btn-primary" onclick="confirmAssignSlot()">Assign</button>
-      </div>
-    </div>
-  </div>
-</div>
+<!-- PLACEMENT MODE BANNER (injected by JS, not a modal) -->
 
 <!-- HISTORY VIEW (inside <main>) is injected via JS -->
 
@@ -1382,7 +1362,7 @@ db.version(5).stores({
 // ===========================
 // VERSION
 // ===========================
-const APP_VERSION = '1.3.1';
+const APP_VERSION = '1.4.1';
 
 // ===========================
 // STATE
@@ -1396,6 +1376,11 @@ let currentBottleId = null;
 let ocrWorker = null;
 let searchDebounce = null;
 let ghConfig = null; // { username, repo, token } — loaded from IndexedDB
+let _placementMode = false;
+let _placementIds = [];
+let _placementName = '';
+let _placementRemaining = 0;
+let _quickAddQty = 1;
 
 // ===========================
 // INIT
@@ -1711,6 +1696,17 @@ async function removeBottle(id) {
   renderStats();
   toast('Bottle removed');
   githubPush({ silent: true });
+}
+
+async function moveToUnassigned(id) {
+  await db.bottles.update(id, { rack: null, row: null, col: null });
+  closeModal('bottle-modal');
+  await loadBottles();
+  renderCollection();
+  renderCellar();
+  renderStats();
+  githubPush({ silent: true });
+  toast('Moved to Unassigned ✓');
 }
 
 function editBottleModal(id) {
@@ -2605,23 +2601,89 @@ function renderCellar() {
     grid.style.gridTemplateRows = '';
     colLabels.innerHTML = '';
     rowLabels.innerHTML = '';
+
+    // Quick-add form at top
+    const quickAdd = `
+      <div id="quick-add-form" style="
+        background:var(--bg3);border:1px solid var(--border);border-radius:2px;
+        padding:14px;margin-bottom:12px;
+      ">
+        <div style="font-size:9px;letter-spacing:0.15em;color:var(--text-muted);text-transform:uppercase;margin-bottom:10px">Quick Add to Unassigned</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+          <input id="qa-name" type="text" placeholder="Wine name *" style="grid-column:1/-1;background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:12px;padding:7px 10px;border-radius:2px;outline:none">
+          <input id="qa-producer" type="text" placeholder="Producer" style="background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:12px;padding:7px 10px;border-radius:2px;outline:none">
+          <input id="qa-vintage" type="number" placeholder="Vintage" min="1800" max="2030" style="background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:12px;padding:7px 10px;border-radius:2px;outline:none">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 80px;gap:8px;margin-bottom:8px">
+          <select id="qa-type" style="background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:12px;padding:7px 8px;border-radius:2px;outline:none">
+            <option value="">Type…</option>
+            <option value="red">Red</option>
+            <option value="white">White</option>
+            <option value="rosé">Rosé</option>
+            <option value="sparkling">Sparkling</option>
+            <option value="orange">Orange</option>
+            <option value="dessert">Dessert</option>
+            <option value="fortified">Fortified</option>
+          </select>
+          <select id="qa-tier" style="background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:12px;padding:7px 8px;border-radius:2px;outline:none">
+            <option value="">Tier…</option>
+            <option value="$">$</option>
+            <option value="$$">$$</option>
+            <option value="$$$">$$$</option>
+            <option value="$$$$">$$$$</option>
+          </select>
+          <div style="display:flex;align-items:center;gap:6px">
+            <button onclick="quickAddQty(-1)" style="background:var(--bg2);border:1px solid var(--border);color:var(--text);width:28px;height:34px;cursor:pointer;border-radius:2px;font-size:16px;display:flex;align-items:center;justify-content:center">−</button>
+            <span id="qa-qty-display" style="font-family:var(--font-mono);font-size:13px;color:var(--text);min-width:14px;text-align:center">1</span>
+            <button onclick="quickAddQty(1)" style="background:var(--bg2);border:1px solid var(--border);color:var(--text);width:28px;height:34px;cursor:pointer;border-radius:2px;font-size:16px;display:flex;align-items:center;justify-content:center">+</button>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+          <input id="qa-price" type="number" placeholder="Purchase price ($)" step="0.01" min="0" style="background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:12px;padding:7px 10px;border-radius:2px;outline:none">
+          <div></div>
+        </div>
+        <textarea id="qa-personal" rows="2" placeholder="Personal notes (optional)" style="width:100%;background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:12px;padding:7px 10px;border-radius:2px;outline:none;resize:vertical;margin-bottom:8px"></textarea>
+        <button onclick="submitQuickAdd()" class="btn btn-primary" style="width:100%;font-size:11px">Add to Unassigned</button>
+      </div>`;
+
     if (unassigned.length === 0) {
-      grid.innerHTML = `<div style="padding:24px;text-align:center;color:var(--text-muted);font-size:11px;grid-column:1/-1">No unassigned bottles</div>`;
+      grid.innerHTML = quickAdd + `<div style="padding:16px;text-align:center;color:var(--text-muted);font-size:11px">No unassigned bottles — add some above</div>`;
       return;
     }
-    grid.innerHTML = unassigned.map(b => `
+
+    // Group by name+producer+vintage+type for display
+    const groups = {};
+    unassigned.forEach(b => {
+      const key = [b.name, b.producer, b.vintage, b.type].join('|');
+      if (!groups[key]) groups[key] = { b, ids: [] };
+      groups[key].ids.push(b.id);
+    });
+
+    const listHtml = Object.values(groups).map(({ b, ids }) => `
       <div style="
         display:flex;align-items:center;justify-content:space-between;
         padding:10px 14px;background:var(--bg2);border:1px solid var(--border);
-        border-radius:2px;cursor:pointer;gap:10px;
-      " onclick="openBottle(${b.id})">
-        <div style="flex:1;min-width:0">
+        border-radius:2px;gap:10px;
+      ">
+        <div style="flex:1;min-width:0;cursor:pointer" onclick="openBottle(${ids[0]})">
           <div style="font-family:var(--font-serif);font-size:15px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.name || 'Unnamed'}</div>
-          <div style="font-size:10px;color:var(--text-muted);margin-top:2px">${[b.producer, b.vintage, capitalize(b.type)].filter(Boolean).join(' · ')}</div>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:2px">
+            ${[b.producer, b.vintage, capitalize(b.type)].filter(Boolean).join(' · ')}
+            ${ids.length > 1 ? `<span style="color:var(--gold);margin-left:6px">×${ids.length}</span>` : ''}
+          </div>
         </div>
-        <button onclick="event.stopPropagation();openAssignSlot(${b.id})" class="btn btn-sm btn-gold" style="white-space:nowrap;flex-shrink:0">Assign Slot →</button>
+        <button onclick="startPlacement(${JSON.stringify(ids).replace(/"/g,'&quot;')}, '${(b.name||'').replace(/'/g,"\\'")}', ${ids.length})"
+          class="btn btn-sm btn-gold" style="white-space:nowrap;flex-shrink:0">
+          Place in Rack →
+        </button>
       </div>
     `).join('');
+
+    grid.innerHTML = quickAdd + listHtml;
+    // Restore qty counter
+    _quickAddQty = _quickAddQty || 1;
+    const qtyEl = document.getElementById('qa-qty-display');
+    if (qtyEl) qtyEl.textContent = _quickAddQty;
     return;
   }
 
@@ -2665,8 +2727,14 @@ function renderCellar() {
         slot.addEventListener('mouseleave', hideTooltip);
         slot.addEventListener('click', () => openBottle(b.id));
       } else {
-        slot.addEventListener('click', () => assignSlot(r, c));
-        slot.title = `R${r}C${c} — Empty`;
+        if (_placementMode) {
+          slot.classList.add('placement-target');
+          slot.addEventListener('click', () => placeBottleInSlot(r, c));
+          slot.title = `Tap to place here`;
+        } else {
+          slot.addEventListener('click', () => assignSlot(r, c));
+          slot.title = `R${r}C${c} — Empty`;
+        }
       }
       grid.appendChild(slot);
     }
@@ -3396,47 +3464,143 @@ async function deleteDepartedEntry(id) {
 }
 
 // ===========================
-// ASSIGN SLOT (Unassigned bottles)
+// QUICK ADD TO UNASSIGNED
 // ===========================
-let _assignBottleId = null;
-
-function openAssignSlot(id) {
-  _assignBottleId = id;
-  const b = bottles.find(x => x.id === id);
-  document.getElementById('assign-bottle-name').textContent = b?.name || 'Assign Location';
-
-  // Populate rack select
-  const sel = document.getElementById('assign-rack-select');
-  sel.innerHTML = racks.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
-  document.getElementById('assign-row').value = '';
-  document.getElementById('assign-col').value = '';
-
-  document.getElementById('assign-slot-modal').classList.add('open');
+function quickAddQty(delta) {
+  _quickAddQty = Math.max(1, (_quickAddQty || 1) + delta);
+  const el = document.getElementById('qa-qty-display');
+  if (el) el.textContent = _quickAddQty;
 }
 
-async function confirmAssignSlot() {
-  if (!_assignBottleId) return;
-  const rackId = parseInt(document.getElementById('assign-rack-select').value);
-  const row = parseInt(document.getElementById('assign-row').value);
-  const col = parseInt(document.getElementById('assign-col').value);
+async function submitQuickAdd() {
+  const name = document.getElementById('qa-name')?.value.trim();
+  if (!name) { toast('Wine name is required', 'error'); return; }
+  const producer = document.getElementById('qa-producer')?.value.trim() || '';
+  const vintage = parseInt(document.getElementById('qa-vintage')?.value) || null;
+  const type = document.getElementById('qa-type')?.value || '';
+  const priceTier = document.getElementById('qa-tier')?.value || null;
+  const purchasePrice = parseFloat(document.getElementById('qa-price')?.value) || null;
+  const personal = document.getElementById('qa-personal')?.value.trim() || '';
+  const qty = _quickAddQty || 1;
 
-  const rack = racks.find(r => r.id === rackId);
-  if (!rack) { toast('Select a rack', 'error'); return; }
-  if (!row || row < 1 || row > rack.rows) { toast(`Row must be 1–${rack.rows}`, 'error'); return; }
-  if (!col || col < 1 || col > rack.cols) { toast(`Col must be 1–${rack.cols}`, 'error'); return; }
+  const now = new Date().toISOString();
+  for (let i = 0; i < qty; i++) {
+    await db.bottles.add({
+      name, producer, vintage, type, priceTier, purchasePrice,
+      personal: personal || null,
+      rack: null, row: null, col: null,
+      synced: false, addedAt: now
+    });
+  }
 
-  // Check slot not already occupied
-  const occupied = bottles.find(b => b.rack == rackId && b.row == row && b.col == col && b.id !== _assignBottleId);
-  if (occupied) { toast(`Slot R${row}C${col} is already taken by "${occupied.name}"`, 'error'); return; }
+  _quickAddQty = 1;
+  // Clear form fields
+  ['qa-name','qa-producer','qa-vintage','qa-price','qa-personal'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  ['qa-type','qa-tier'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
 
-  await db.bottles.update(_assignBottleId, { rack: rackId, row, col });
-  _assignBottleId = null;
-  closeModal('assign-slot-modal');
   await loadBottles();
-  renderCollection();
   renderCellar();
+  renderCollection();
   githubPush({ silent: true });
-  toast('Slot assigned ✓', 'success');
+  toast(`Added ${qty} bottle${qty > 1 ? 's' : ''} to Unassigned ✓`, 'success');
+}
+
+// ===========================
+// PLACEMENT MODE
+// ===========================
+function startPlacement(ids, name, total) {
+  _placementIds = [...ids];
+  _placementName = name;
+  _placementRemaining = ids.length;
+  _placementMode = true;
+
+  // Switch to first real rack tab
+  if (racks.length === 0) { toast('Add a rack first', 'error'); return; }
+  currentRackId = racks[0].id;
+
+  // Show placement banner
+  showPlacementBanner();
+  renderCellar();
+}
+
+function showPlacementBanner() {
+  const existing = document.getElementById('placement-banner');
+  if (existing) existing.remove();
+
+  const banner = document.createElement('div');
+  banner.id = 'placement-banner';
+  banner.style.cssText = `
+    position:sticky;top:56px;z-index:200;
+    background:#fff8ee;border-bottom:2px solid var(--gold);
+    padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+    font-family:var(--font-mono);font-size:11px;
+  `;
+  banner.innerHTML = `
+    <div>
+      <span style="color:var(--gold);letter-spacing:0.1em;font-weight:600">PLACEMENT MODE</span>
+      <span style="color:var(--text-dim);margin-left:10px">
+        Tap an empty slot to place <em style="color:var(--text)">${_placementName}</em>
+      </span>
+      <span id="placement-remaining" style="
+        margin-left:10px;background:var(--gold);color:#fff;
+        font-size:10px;padding:2px 8px;border-radius:10px;
+      ">${_placementRemaining} left</span>
+    </div>
+    <button onclick="cancelPlacement()" style="
+      background:none;border:1px solid var(--border);color:var(--text-muted);
+      font-family:var(--font-mono);font-size:10px;padding:4px 10px;cursor:pointer;border-radius:2px;
+    ">Cancel</button>
+  `;
+
+  // Insert after header inside rack grid wrap area, or prepend to cellar view
+  const cellarView = document.getElementById('view-cellar');
+  if (cellarView) cellarView.prepend(banner);
+}
+
+function cancelPlacement() {
+  _placementMode = false;
+  _placementIds = [];
+  _placementRemaining = 0;
+  document.getElementById('placement-banner')?.remove();
+  currentRackId = 'unassigned';
+  renderCellar();
+}
+
+async function placeBottleInSlot(row, col) {
+  if (!_placementMode || _placementIds.length === 0) return;
+
+  // Check not occupied
+  const occupied = bottles.find(b => b.rack == currentRackId && b.row == row && b.col == col);
+  if (occupied) { toast(`Slot R${row}C${col} already occupied`, 'error'); return; }
+
+  const bottleId = _placementIds.shift();
+  _placementRemaining = _placementIds.length;
+
+  const rack = racks.find(r => r.id === currentRackId);
+  await db.bottles.update(bottleId, { rack: currentRackId, row, col });
+  await loadBottles();
+
+  if (_placementIds.length === 0) {
+    // Done — exit placement mode
+    _placementMode = false;
+    document.getElementById('placement-banner')?.remove();
+    renderCellar();
+    renderCollection();
+    githubPush({ silent: true });
+    toast(`All bottles placed ✓`, 'success');
+  } else {
+    // Update counter and re-render grid
+    const rem = document.getElementById('placement-remaining');
+    if (rem) rem.textContent = `${_placementRemaining} left`;
+    renderCellar();
+    toast(`Placed in ${rack?.name || 'rack'} R${row}C${col} — ${_placementRemaining} more to place`);
+  }
 }
 
 // ===========================

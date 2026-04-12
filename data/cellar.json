@@ -1,6 +1,6 @@
 {
   "version": "1.3.0",
-  "exportedAt": "2026-04-12T04:41:29.152Z",
+  "exportedAt": "2026-04-12T04:41:41.301Z",
   "racks": [
     {
       "id": 1,
@@ -38,22 +38,6 @@
       "row": 1,
       "col": 3,
       "id": 35
-    },
-    {
-      "addedAt": "2026-03-01T01:05:09.814Z",
-      "synced": false,
-      "name": "Le Ciel Serein",
-      "producer": "Domaine Carneros",
-      "vintage": 2022,
-      "type": "red",
-      "varietal": "Pinot Noir",
-      "country": "USA",
-      "quantity": 1,
-      "priceTier": "$",
-      "rack": 1,
-      "row": 1,
-      "col": 4,
-      "id": 37
     },
     {
       "addedAt": "2026-02-28",
@@ -893,6 +877,22 @@
       "notes": "",
       "addedAt": "2026-03-01T01:04:47.217Z",
       "id": 1
+    },
+    {
+      "name": "Le Ciel Serein",
+      "producer": "Domaine Carneros",
+      "vintage": 2022,
+      "type": "red",
+      "varietal": "Pinot Noir",
+      "country": "USA",
+      "priceTier": "$",
+      "reason": "Consumed",
+      "departedAt": "2026-04-05",
+      "score": null,
+      "critic": "",
+      "notes": "",
+      "addedAt": "2026-03-01T01:05:09.814Z",
+      "id": 2
     }
   ]
 }

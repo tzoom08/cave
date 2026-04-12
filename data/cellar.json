@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "exportedAt": "2026-04-12T21:51:05.775Z",
+  "exportedAt": "2026-04-12T21:51:28.403Z",
   "racks": [
     {
       "id": 1,
@@ -731,9 +731,9 @@
       "country": "Italy",
       "quantity": 1,
       "priceTier": "$",
-      "rack": null,
-      "row": null,
-      "col": null
+      "rack": 1,
+      "row": 1,
+      "col": 3
     },
     {
       "id": 77,

@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "exportedAt": "2026-04-12T21:19:46.860Z",
+  "exportedAt": "2026-04-12T21:24:45.340Z",
   "racks": [
     {
       "id": 1,
@@ -35,9 +35,9 @@
       "country": "Italy",
       "quantity": 1,
       "priceTier": "$",
-      "rack": 1,
-      "row": 1,
-      "col": 3
+      "rack": null,
+      "row": null,
+      "col": null
     },
     {
       "id": 38,
@@ -1076,9 +1076,9 @@
       "region": "Oregon",
       "country": "USA",
       "personal": null,
-      "rack": null,
-      "row": null,
-      "col": null,
+      "rack": 1,
+      "row": 1,
+      "col": 1,
       "synced": false,
       "addedAt": "2026-04-12T21:19:46.845Z",
       "id": 97

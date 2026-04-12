@@ -1362,7 +1362,7 @@ db.version(5).stores({
 // ===========================
 // VERSION
 // ===========================
-const APP_VERSION = '1.4.1';
+const APP_VERSION = '1.4.3';
 
 // ===========================
 // STATE
@@ -2603,6 +2603,8 @@ function renderCellar() {
     rowLabels.innerHTML = '';
 
     // Quick-add form at top
+    const IS = 'background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:12px;padding:7px 10px;border-radius:2px;outline:none';
+    const ISS = IS.replace('padding:7px 10px','padding:7px 8px'); // select padding
     const quickAdd = `
       <div id="quick-add-form" style="
         background:var(--bg3);border:1px solid var(--border);border-radius:2px;
@@ -2610,12 +2612,12 @@ function renderCellar() {
       ">
         <div style="font-size:9px;letter-spacing:0.15em;color:var(--text-muted);text-transform:uppercase;margin-bottom:10px">Quick Add to Unassigned</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-          <input id="qa-name" type="text" placeholder="Wine name *" style="grid-column:1/-1;background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:12px;padding:7px 10px;border-radius:2px;outline:none">
-          <input id="qa-producer" type="text" placeholder="Producer" style="background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:12px;padding:7px 10px;border-radius:2px;outline:none">
-          <input id="qa-vintage" type="number" placeholder="Vintage" min="1800" max="2030" style="background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:12px;padding:7px 10px;border-radius:2px;outline:none">
+          <input id="qa-name" type="text" placeholder="Wine name *" style="grid-column:1/-1;${IS}">
+          <input id="qa-producer" type="text" placeholder="Producer" style="${IS}">
+          <input id="qa-vintage" type="number" placeholder="Vintage" min="1800" max="2030" style="${IS}">
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr 80px;gap:8px;margin-bottom:8px">
-          <select id="qa-type" style="background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:12px;padding:7px 8px;border-radius:2px;outline:none">
+          <select id="qa-type" style="${ISS}">
             <option value="">Type…</option>
             <option value="red">Red</option>
             <option value="white">White</option>
@@ -2625,7 +2627,7 @@ function renderCellar() {
             <option value="dessert">Dessert</option>
             <option value="fortified">Fortified</option>
           </select>
-          <select id="qa-tier" style="background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:12px;padding:7px 8px;border-radius:2px;outline:none">
+          <select id="qa-tier" style="${ISS}">
             <option value="">Tier…</option>
             <option value="$">$</option>
             <option value="$$">$$</option>
@@ -2639,10 +2641,14 @@ function renderCellar() {
           </div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-          <input id="qa-price" type="number" placeholder="Purchase price ($)" step="0.01" min="0" style="background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:12px;padding:7px 10px;border-radius:2px;outline:none">
-          <div></div>
+          <input id="qa-varietal" type="text" placeholder="Varietal" style="${IS}">
+          <input id="qa-price" type="number" placeholder="Purchase price ($)" step="0.01" min="0" style="${IS}">
         </div>
-        <textarea id="qa-personal" rows="2" placeholder="Personal notes (optional)" style="width:100%;background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:12px;padding:7px 10px;border-radius:2px;outline:none;resize:vertical;margin-bottom:8px"></textarea>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+          <input id="qa-region" type="text" placeholder="Region" style="${IS}">
+          <input id="qa-country" type="text" placeholder="Country" style="${IS}">
+        </div>
+        <textarea id="qa-personal" rows="2" placeholder="Personal notes (optional)" style="width:100%;${IS};resize:vertical;margin-bottom:8px"></textarea>
         <button onclick="submitQuickAdd()" class="btn btn-primary" style="width:100%;font-size:11px">Add to Unassigned</button>
       </div>`;
 
@@ -2659,27 +2665,69 @@ function renderCellar() {
       groups[key].ids.push(b.id);
     });
 
-    const listHtml = Object.values(groups).map(({ b, ids }) => `
-      <div style="
-        display:flex;align-items:center;justify-content:space-between;
-        padding:10px 14px;background:var(--bg2);border:1px solid var(--border);
-        border-radius:2px;gap:10px;
-      ">
-        <div style="flex:1;min-width:0;cursor:pointer" onclick="openBottle(${ids[0]})">
-          <div style="font-family:var(--font-serif);font-size:15px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.name || 'Unnamed'}</div>
-          <div style="font-size:10px;color:var(--text-muted);margin-top:2px">
-            ${[b.producer, b.vintage, capitalize(b.type)].filter(Boolean).join(' · ')}
-            ${ids.length > 1 ? `<span style="color:var(--gold);margin-left:6px">×${ids.length}</span>` : ''}
+    const listHtml = Object.values(groups).map(({ b, ids }) => {
+      const idsJson = JSON.stringify(ids).replace(/"/g,'&quot;');
+      const safeName = (b.name||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;');
+      const typeOpts = ['red','white','rosé','sparkling','orange','dessert','fortified']
+        .map(t => `<option value="${t}" ${b.type===t?'selected':''}>${t.charAt(0).toUpperCase()+t.slice(1)}</option>`).join('');
+      const tierOpts = ['$','$$','$$$','$$$$']
+        .map(t => `<option value="${t}" ${b.priceTier===t?'selected':''}>${t}</option>`).join('');
+      const v = (val) => (val||'').toString().replace(/"/g,'&quot;');
+      return `
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:2px;margin-bottom:0">
+        <div id="ua-row-${ids[0]}" style="display:flex;align-items:center;padding:10px 14px;gap:10px">
+          <div style="flex:1;min-width:0">
+            <div style="font-family:var(--font-serif);font-size:15px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.name || 'Unnamed'}</div>
+            <div style="font-size:10px;color:var(--text-muted);margin-top:2px">
+              ${[b.producer, b.vintage, capitalize(b.type), b.varietal].filter(Boolean).join(' · ')}
+              ${b.region ? ' · ' + b.region : ''}
+              ${ids.length > 1 ? `<span style="color:var(--gold);margin-left:6px">×${ids.length}</span>` : ''}
+            </div>
+          </div>
+          <button onclick="toggleUAEdit(${ids[0]})" class="btn btn-sm" style="white-space:nowrap;flex-shrink:0">✏</button>
+          <button onclick="startPlacement(${idsJson}, '${safeName}', ${ids.length})" class="btn btn-sm btn-gold" style="white-space:nowrap;flex-shrink:0">Place →</button>
+        </div>
+        <div id="ua-edit-${ids[0]}" style="display:none;padding:12px 14px;border-top:1px solid var(--border);background:var(--bg3)">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
+            <input id="ua-f-name-${ids[0]}" type="text" value="${v(b.name)}" placeholder="Name" style="grid-column:1/-1;background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:12px;padding:6px 8px;border-radius:2px;outline:none">
+            <input id="ua-f-producer-${ids[0]}" type="text" value="${v(b.producer)}" placeholder="Producer" style="background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:12px;padding:6px 8px;border-radius:2px;outline:none">
+            <input id="ua-f-vintage-${ids[0]}" type="number" value="${b.vintage||''}" placeholder="Vintage" style="background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:12px;padding:6px 8px;border-radius:2px;outline:none">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
+            <input id="ua-f-varietal-${ids[0]}" type="text" value="${v(b.varietal)}" placeholder="Varietal" style="background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:12px;padding:6px 8px;border-radius:2px;outline:none">
+            <select id="ua-f-type-${ids[0]}" style="background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:12px;padding:6px 8px;border-radius:2px;outline:none">
+              <option value="">Type…</option>${typeOpts}
+            </select>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
+            <input id="ua-f-region-${ids[0]}" type="text" value="${v(b.region)}" placeholder="Region" style="background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:12px;padding:6px 8px;border-radius:2px;outline:none">
+            <input id="ua-f-country-${ids[0]}" type="text" value="${v(b.country)}" placeholder="Country" style="background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:12px;padding:6px 8px;border-radius:2px;outline:none">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
+            <input id="ua-f-price-${ids[0]}" type="number" value="${b.purchasePrice||''}" placeholder="Purchase price ($)" step="0.01" style="background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:12px;padding:6px 8px;border-radius:2px;outline:none">
+            <select id="ua-f-tier-${ids[0]}" style="background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:12px;padding:6px 8px;border-radius:2px;outline:none">
+              <option value="">Tier…</option>${tierOpts}
+            </select>
+          </div>
+          <textarea id="ua-f-personal-${ids[0]}" rows="2" placeholder="Personal notes" style="width:100%;background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:12px;padding:6px 8px;border-radius:2px;outline:none;resize:vertical;margin-bottom:8px">${v(b.personal)}</textarea>
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">
+            <span style="font-size:9px;letter-spacing:0.12em;color:var(--text-muted);text-transform:uppercase;white-space:nowrap">Quantity</span>
+            <button onclick="uaQtyStep(${ids[0]}, -1)" style="background:var(--bg2);border:1px solid var(--border);color:var(--text);width:28px;height:28px;cursor:pointer;border-radius:2px;font-size:15px;flex-shrink:0">−</button>
+            <input id="ua-f-qty-${ids[0]}" type="number" min="1" value="${ids.length}" style="width:52px;text-align:center;background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:12px;padding:4px 6px;border-radius:2px;outline:none">
+            <button onclick="uaQtyStep(${ids[0]}, 1)" style="background:var(--bg2);border:1px solid var(--border);color:var(--text);width:28px;height:28px;cursor:pointer;border-radius:2px;font-size:15px;flex-shrink:0">+</button>
+            <span style="font-size:10px;color:var(--text-muted);margin-left:2px">currently ${ids.length}</span>
+          </div>
+          <div style="display:flex;gap:6px;justify-content:space-between;align-items:center">
+            <button onclick="deleteUAGroup(${idsJson})" class="btn btn-sm" style="border-color:var(--wine);color:var(--wine-light)">🗑 Delete All</button>
+            <div style="display:flex;gap:6px">
+              <button onclick="toggleUAEdit(${ids[0]})" class="btn btn-sm">Cancel</button>
+              <button onclick="saveUAEdit(${ids[0]}, ${idsJson})" class="btn btn-sm btn-primary">Save</button>
+            </div>
           </div>
         </div>
-        <button onclick="startPlacement(${JSON.stringify(ids).replace(/"/g,'&quot;')}, '${(b.name||'').replace(/'/g,"\\'")}', ${ids.length})"
-          class="btn btn-sm btn-gold" style="white-space:nowrap;flex-shrink:0">
-          Place in Rack →
-        </button>
-      </div>
-    `).join('');
-
-    grid.innerHTML = quickAdd + listHtml;
+      </div>`;
+    }).join('');
+grid.innerHTML = quickAdd + listHtml;
     // Restore qty counter
     _quickAddQty = _quickAddQty || 1;
     const qtyEl = document.getElementById('qa-qty-display');
@@ -3480,14 +3528,17 @@ async function submitQuickAdd() {
   const type = document.getElementById('qa-type')?.value || '';
   const priceTier = document.getElementById('qa-tier')?.value || null;
   const purchasePrice = parseFloat(document.getElementById('qa-price')?.value) || null;
-  const personal = document.getElementById('qa-personal')?.value.trim() || '';
+  const varietal = document.getElementById('qa-varietal')?.value.trim() || null;
+  const region = document.getElementById('qa-region')?.value.trim() || null;
+  const country = document.getElementById('qa-country')?.value.trim() || null;
+  const personal = document.getElementById('qa-personal')?.value.trim() || null;
   const qty = _quickAddQty || 1;
 
   const now = new Date().toISOString();
   for (let i = 0; i < qty; i++) {
     await db.bottles.add({
       name, producer, vintage, type, priceTier, purchasePrice,
-      personal: personal || null,
+      varietal, region, country, personal,
       rack: null, row: null, col: null,
       synced: false, addedAt: now
     });
@@ -3495,7 +3546,7 @@ async function submitQuickAdd() {
 
   _quickAddQty = 1;
   // Clear form fields
-  ['qa-name','qa-producer','qa-vintage','qa-price','qa-personal'].forEach(id => {
+  ['qa-name','qa-producer','qa-vintage','qa-price','qa-personal','qa-varietal','qa-region','qa-country'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
@@ -3601,6 +3652,77 @@ async function placeBottleInSlot(row, col) {
     renderCellar();
     toast(`Placed in ${rack?.name || 'rack'} R${row}C${col} — ${_placementRemaining} more to place`);
   }
+}
+
+// ===========================
+// UNASSIGNED INLINE EDIT
+// ===========================
+function toggleUAEdit(firstId) {
+  const editPanel = document.getElementById('ua-edit-' + firstId);
+  if (!editPanel) return;
+  const isOpen = editPanel.style.display !== 'none';
+  editPanel.style.display = isOpen ? 'none' : 'block';
+}
+
+async function saveUAEdit(firstId, ids) {
+  const g = (suffix) => document.getElementById(`ua-f-${suffix}-${firstId}`)?.value;
+  const updates = {
+    name:          g('name')?.trim() || null,
+    producer:      g('producer')?.trim() || null,
+    vintage:       parseInt(g('vintage')) || null,
+    varietal:      g('varietal')?.trim() || null,
+    type:          g('type') || null,
+    region:        g('region')?.trim() || null,
+    country:       g('country')?.trim() || null,
+    purchasePrice: parseFloat(g('price')) || null,
+    priceTier:     g('tier') || null,
+    personal:      document.getElementById(`ua-f-personal-${firstId}`)?.value.trim() || null,
+  };
+
+  const newQty = Math.max(1, parseInt(document.getElementById(`ua-f-qty-${firstId}`)?.value) || ids.length);
+  const currentQty = ids.length;
+
+  if (newQty < currentQty) {
+    // Remove excess bottles (delete from the end of the group)
+    const toDelete = ids.slice(newQty);
+    for (const id of toDelete) await db.bottles.delete(id);
+    const toKeep = ids.slice(0, newQty);
+    for (const id of toKeep) await db.bottles.update(id, updates);
+  } else if (newQty > currentQty) {
+    // Update existing and add new bottles cloned from the first
+    for (const id of ids) await db.bottles.update(id, updates);
+    const base = await db.bottles.get(firstId);
+    const toAdd = newQty - currentQty;
+    for (let i = 0; i < toAdd; i++) {
+      const { id: _id, ...rest } = base;
+      await db.bottles.add({ ...rest, ...updates, rack: null, row: null, col: null, addedAt: new Date().toISOString() });
+    }
+  } else {
+    for (const id of ids) await db.bottles.update(id, updates);
+  }
+
+  await loadBottles();
+  renderCellar();
+  renderCollection();
+  githubPush({ silent: true });
+  toast(`${newQty} bottle${newQty !== 1 ? 's' : ''} updated ✓`, 'success');
+}
+
+function uaQtyStep(firstId, delta) {
+  const el = document.getElementById(`ua-f-qty-${firstId}`);
+  if (el) el.value = Math.max(1, (parseInt(el.value) || 1) + delta);
+}
+
+async function deleteUAGroup(ids) {
+  const n = ids.length;
+  if (!confirm(`Delete ${n} bottle${n > 1 ? 's' : ''} from your cellar? This cannot be undone.`)) return;
+  for (const id of ids) await db.bottles.delete(id);
+  await loadBottles();
+  renderCellar();
+  renderCollection();
+  renderStats();
+  githubPush({ silent: true });
+  toast(`${n} bottle${n > 1 ? 's' : ''} deleted`, 'success');
 }
 
 // ===========================

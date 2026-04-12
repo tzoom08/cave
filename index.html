@@ -807,6 +807,7 @@
   <button class="nav-tab" data-view="add">Add Bottle</button>
   <button class="nav-tab" data-view="cellar">Cellar Map</button>
   <button class="nav-tab" data-view="stats">Statistics</button>
+  <button class="nav-tab" data-view="history">History</button>
 </nav>
 
 <main>
@@ -842,6 +843,19 @@
           Already set up on another device?<br>Connect GitHub and pull your collection.
         </p>
       </div>
+    </div>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="view" id="view-history">
+    <div class="section-header">
+      <div class="section-title">Cellar History</div>
+    </div>
+    <div id="history-list" style="display:flex;flex-direction:column;gap:10px;padding-bottom:40px"></div>
+    <div id="history-empty" class="empty-state" style="display:none">
+      <span class="es-icon">📖</span>
+      <h3>No history yet</h3>
+      <p>Bottles you drink, gift, or sell<br>will appear here.</p>
     </div>
   </div>
 
@@ -1129,7 +1143,7 @@
         <div class="detail-item"><div class="detail-label">Type</div><div class="detail-value" id="m-type">—</div></div>
         <div class="detail-item"><div class="detail-label">Varietal</div><div class="detail-value" id="m-varietal">—</div></div>
         <div class="detail-item"><div class="detail-label">Region</div><div class="detail-value" id="m-region">—</div></div>
-        <div class="detail-item"><div class="detail-label">Score</div><div class="detail-value gold" id="m-score">—</div></div>
+        <div class="detail-item"><div class="detail-label">Purchase Price</div><div class="detail-value green" id="m-purchase">—</div></div>
         <div class="detail-item"><div class="detail-label">Market Value</div><div class="detail-value green" id="m-value">—</div></div>
         <div class="detail-item"><div class="detail-label">Location</div><div class="detail-value" id="m-location">—</div></div>
         <div class="detail-item"><div class="detail-label">Drink Window</div><div class="detail-value" id="m-drink">—</div></div>
@@ -1146,6 +1160,7 @@
       <div class="modal-actions">
         <button class="btn btn-sm btn-gold" onclick="syncBottle(currentBottleId)">↻ Fetch Data</button>
         <button class="btn btn-sm" onclick="editBottleModal(currentBottleId)">✏ Edit</button>
+        <button class="btn btn-sm" onclick="openDepartureForm(currentBottleId)" style="border-color:var(--gold);color:var(--gold)">↗ Log Departure</button>
         <button class="btn btn-sm" style="margin-left:auto;border-color:var(--wine);color:var(--wine-light)" onclick="removeBottle(currentBottleId)">Remove</button>
       </div>
     </div>
@@ -1249,6 +1264,85 @@
   </div>
 </div>
 
+<!-- DEPARTURE MODAL -->
+<div class="modal-overlay" id="departure-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-wine-name" id="dep-name">—</div>
+        <div class="modal-producer">Log how this bottle left your cellar</div>
+      </div>
+      <button class="btn btn-sm btn-icon" onclick="closeModal('departure-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>How did it leave?</label>
+        <select id="dep-reason">
+          <option value="Consumed">🍷 Consumed — drank it</option>
+          <option value="Gifted">🎁 Gifted — gave it away</option>
+          <option value="Sold">💰 Sold</option>
+          <option value="Lost">😢 Lost / broken</option>
+          <option value="Other">· Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Date</label>
+        <input type="date" id="dep-date">
+      </div>
+      <div class="field" id="dep-rating-wrap">
+        <label>Rating (optional)</label>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input type="number" id="dep-score" min="80" max="100" placeholder="e.g. 92" style="width:90px">
+          <input type="text" id="dep-critic" placeholder="Critic or source (optional)" style="flex:1">
+        </div>
+      </div>
+      <div class="field">
+        <label>Notes (optional)</label>
+        <textarea id="dep-notes" rows="3" placeholder="How was it? Any occasion?"></textarea>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px">
+        <button class="btn btn-sm" onclick="closeModal('departure-modal')">Cancel</button>
+        <button class="btn btn-sm btn-primary" onclick="confirmDeparture()">Log Departure</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ASSIGN SLOT MODAL (for Unassigned bottles) -->
+<div class="modal-overlay" id="assign-slot-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-wine-name" id="assign-bottle-name">Assign Location</div>
+        <div class="modal-producer">Choose a rack and slot</div>
+      </div>
+      <button class="btn btn-sm btn-icon" onclick="closeModal('assign-slot-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Rack</label>
+        <select id="assign-rack-select"></select>
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label>Row</label>
+          <input type="number" id="assign-row" min="1" placeholder="1">
+        </div>
+        <div class="field">
+          <label>Col</label>
+          <input type="number" id="assign-col" min="1" placeholder="1">
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px">
+        <button class="btn btn-sm" onclick="closeModal('assign-slot-modal')">Cancel</button>
+        <button class="btn btn-sm btn-primary" onclick="confirmAssignSlot()">Assign</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HISTORY VIEW (inside <main>) is injected via JS -->
+
 <!-- Toast container -->
 <div class="toast-container" id="toast-container"></div>
 
@@ -1276,11 +1370,19 @@ db.version(4).stores({
   photoQueue: '++id, addedAt, processed',
   settings: 'key'
 });
+db.version(5).stores({
+  bottles: '++id, name, producer, vintage, type, varietal, region, rack, row, col, synced, addedAt',
+  racks: '++id, name, rows, cols',
+  syncQueue: '++id, bottleId, action, timestamp',
+  photoQueue: '++id, addedAt, processed',
+  settings: 'key',
+  departed: '++id, name, reason, departedAt'
+});
 
 // ===========================
 // VERSION
 // ===========================
-const APP_VERSION = '1.2.5';
+const APP_VERSION = '1.3.0';
 
 // ===========================
 // STATE
@@ -1349,6 +1451,7 @@ function setupNav() {
       tab.classList.add('active');
       document.getElementById('view-' + tab.dataset.view).classList.add('active');
       if (tab.dataset.view === 'cellar') renderCellar();
+      if (tab.dataset.view === 'history') renderHistory();
       if (tab.dataset.view === 'stats') renderStats();
       if (tab.dataset.view === 'add') populateRackSelect();
     });
@@ -1569,7 +1672,7 @@ async function openBottle(id) {
   document.getElementById('m-type').textContent = capitalize(b.type || '—');
   document.getElementById('m-varietal').textContent = b.varietal || '—';
   document.getElementById('m-region').textContent = [b.region, b.country].filter(Boolean).join(', ') || '—';
-  document.getElementById('m-score').textContent = b.score ? `${b.score}${b.critic ? ' · ' + b.critic : ''}` : '—';
+  document.getElementById('m-purchase').textContent = b.purchasePrice ? `$${b.purchasePrice}` : '—';
   document.getElementById('m-value').textContent = b.marketValue ? `$${b.marketValue}` : '—';
   document.getElementById('m-location').textContent = getLocationStr(b);
   document.getElementById('m-drink').textContent = b.drinkBy || '—';
@@ -2467,9 +2570,11 @@ async function enrichFromSearch(parsed) {
 // ===========================
 function renderCellarTabs() {
   const sel = document.getElementById('rack-selector');
-  sel.innerHTML = racks.map(r => `
+  const rackBtns = racks.map(r => `
     <button class="rack-tab ${r.id === currentRackId ? 'active' : ''}" onclick="selectRack(${r.id})">${r.name}</button>
   `).join('');
+  const unassignedActive = currentRackId === 'unassigned';
+  sel.innerHTML = rackBtns + `<button class="rack-tab ${unassignedActive ? 'active' : ''}" onclick="selectRack('unassigned')" style="font-style:italic">Unassigned</button>`;
 }
 
 function selectRack(id) {
@@ -2480,12 +2585,39 @@ function selectRack(id) {
 
 function renderCellar() {
   renderCellarTabs();
-  const rack = racks.find(r => r.id === currentRackId);
-  if (!rack) return;
-
   const grid = document.getElementById('rack-grid');
   const colLabels = document.getElementById('rack-col-labels');
   const rowLabels = document.getElementById('rack-row-labels');
+
+  // ── Unassigned view ──
+  if (currentRackId === 'unassigned') {
+    const unassigned = bottles.filter(b => !b.rack && !b.row && !b.col);
+    grid.style.gridTemplateColumns = '1fr';
+    grid.style.gridTemplateRows = '';
+    colLabels.innerHTML = '';
+    rowLabels.innerHTML = '';
+    if (unassigned.length === 0) {
+      grid.innerHTML = `<div style="padding:24px;text-align:center;color:var(--text-muted);font-size:11px;grid-column:1/-1">No unassigned bottles</div>`;
+      return;
+    }
+    grid.innerHTML = unassigned.map(b => `
+      <div style="
+        display:flex;align-items:center;justify-content:space-between;
+        padding:10px 14px;background:var(--bg2);border:1px solid var(--border);
+        border-radius:2px;cursor:pointer;gap:10px;
+      " onclick="openBottle(${b.id})">
+        <div style="flex:1;min-width:0">
+          <div style="font-family:var(--font-serif);font-size:15px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.name || 'Unnamed'}</div>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:2px">${[b.producer, b.vintage, capitalize(b.type)].filter(Boolean).join(' · ')}</div>
+        </div>
+        <button onclick="event.stopPropagation();openAssignSlot(${b.id})" class="btn btn-sm btn-gold" style="white-space:nowrap;flex-shrink:0">Assign Slot →</button>
+      </div>
+    `).join('');
+    return;
+  }
+
+  const rack = racks.find(r => r.id === currentRackId);
+  if (!rack) return;
 
   grid.style.gridTemplateColumns = `repeat(${rack.cols}, 44px)`;
   grid.style.gridTemplateRows = `repeat(${rack.rows}, 44px)`;
@@ -2794,11 +2926,13 @@ async function githubPush({ silent = false } = {}) {
     // Build the payload — all bottles + racks
     const allBottles = await db.bottles.toArray();
     const allRacks = await db.racks.toArray();
+    const allDeparted = await db.departed.toArray();
     const payload = {
       version: APP_VERSION,
       exportedAt: new Date().toISOString(),
       racks: allRacks,
-      bottles: allBottles
+      bottles: allBottles,
+      departed: allDeparted
     };
     const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
 
@@ -2886,6 +3020,15 @@ async function githubPull({ silent = false } = {}) {
       for (const b of json.bottles) {
         const { id, ...bottleData } = b;
         await db.bottles.add({ id, ...bottleData });
+      }
+    }
+
+    // Restore departed history
+    if (json.departed && json.departed.length > 0) {
+      await db.departed.clear();
+      for (const d of json.departed) {
+        const { id, ...depData } = d;
+        await db.departed.add({ id, ...depData });
       }
     }
 
@@ -3123,6 +3266,168 @@ async function commitCsvImport(colMap, lines, mode) {
   renderStats();
   githubPush({ silent: true });
   toast(`Imported ${imported} bottle${imported !== 1 ? 's' : ''} ✓`, 'success');
+}
+
+// ===========================
+// DEPARTURE / LOG LEAVING
+// ===========================
+let _departureBottleId = null;
+
+async function openDepartureForm(id) {
+  const b = await db.bottles.get(id);
+  if (!b) return;
+  _departureBottleId = id;
+  document.getElementById('dep-name').textContent = b.name || 'Unnamed Wine';
+  document.getElementById('dep-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('dep-score').value = b.score || '';
+  document.getElementById('dep-critic').value = '';
+  document.getElementById('dep-notes').value = '';
+  document.getElementById('dep-reason').value = 'Consumed';
+  closeModal('bottle-modal');
+  document.getElementById('departure-modal').classList.add('open');
+}
+
+async function confirmDeparture() {
+  if (!_departureBottleId) return;
+  const b = await db.bottles.get(_departureBottleId);
+  if (!b) return;
+
+  const reason = document.getElementById('dep-reason').value;
+  const depDate = document.getElementById('dep-date').value;
+  const score = parseInt(document.getElementById('dep-score').value) || null;
+  const critic = document.getElementById('dep-critic').value.trim();
+  const notes = document.getElementById('dep-notes').value.trim();
+
+  // Save to departed table
+  await db.departed.add({
+    name: b.name,
+    producer: b.producer,
+    vintage: b.vintage,
+    type: b.type,
+    varietal: b.varietal,
+    region: b.region,
+    country: b.country,
+    purchasePrice: b.purchasePrice,
+    priceTier: b.priceTier,
+    reason,
+    departedAt: depDate || new Date().toISOString().split('T')[0],
+    score,
+    critic,
+    notes,
+    addedAt: b.addedAt,
+  });
+
+  // Remove from active cellar
+  await db.bottles.delete(_departureBottleId);
+  _departureBottleId = null;
+
+  closeModal('departure-modal');
+  await loadBottles();
+  renderCollection();
+  renderStats();
+  renderCellar();
+  renderHistory();
+  githubPush({ silent: true });
+  toast(`Logged as ${reason} ✓`, 'success');
+}
+
+// ===========================
+// HISTORY VIEW
+// ===========================
+async function renderHistory() {
+  const list = document.getElementById('history-list');
+  const empty = document.getElementById('history-empty');
+  if (!list) return;
+
+  const all = await db.departed.orderBy('departedAt').reverse().toArray();
+  if (all.length === 0) {
+    list.innerHTML = '';
+    if (empty) empty.style.display = 'block';
+    return;
+  }
+  if (empty) empty.style.display = 'none';
+
+  const reasonIcon = { Consumed: '🍷', Gifted: '🎁', Sold: '💰', Lost: '😢', Other: '·' };
+
+  list.innerHTML = all.map(d => `
+    <div style="
+      background:var(--bg2);border:1px solid var(--border);border-radius:2px;
+      padding:14px 16px;position:relative;
+    ">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+        <div style="flex:1;min-width:0">
+          <div style="font-family:var(--font-serif);font-size:16px;color:var(--text);margin-bottom:2px">
+            ${d.name || 'Unnamed Wine'}
+          </div>
+          <div style="font-size:10px;color:var(--text-muted);margin-bottom:8px">
+            ${[d.producer, d.vintage, capitalize(d.type)].filter(Boolean).join(' · ')}
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;font-size:10px;color:var(--text-dim)">
+            <span>${reasonIcon[d.reason] || '·'} ${d.reason}</span>
+            <span>📅 ${d.departedAt}</span>
+            ${d.score ? `<span>★ ${d.score}${d.critic ? ' · ' + d.critic : ''}</span>` : ''}
+            ${d.purchasePrice ? `<span>$${d.purchasePrice}</span>` : ''}
+          </div>
+          ${d.notes ? `<div style="margin-top:8px;font-size:11px;color:var(--text-dim);font-style:italic;line-height:1.6">${d.notes}</div>` : ''}
+        </div>
+        <button onclick="deleteDepartedEntry(${d.id})" style="
+          background:none;border:none;color:var(--text-muted);font-size:14px;
+          cursor:pointer;padding:0 0 0 8px;flex-shrink:0;
+        " title="Remove entry">✕</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function deleteDepartedEntry(id) {
+  if (!confirm('Remove this history entry?')) return;
+  await db.departed.delete(id);
+  renderHistory();
+  toast('Entry removed');
+}
+
+// ===========================
+// ASSIGN SLOT (Unassigned bottles)
+// ===========================
+let _assignBottleId = null;
+
+function openAssignSlot(id) {
+  _assignBottleId = id;
+  const b = bottles.find(x => x.id === id);
+  document.getElementById('assign-bottle-name').textContent = b?.name || 'Assign Location';
+
+  // Populate rack select
+  const sel = document.getElementById('assign-rack-select');
+  sel.innerHTML = racks.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
+  document.getElementById('assign-row').value = '';
+  document.getElementById('assign-col').value = '';
+
+  document.getElementById('assign-slot-modal').classList.add('open');
+}
+
+async function confirmAssignSlot() {
+  if (!_assignBottleId) return;
+  const rackId = parseInt(document.getElementById('assign-rack-select').value);
+  const row = parseInt(document.getElementById('assign-row').value);
+  const col = parseInt(document.getElementById('assign-col').value);
+
+  const rack = racks.find(r => r.id === rackId);
+  if (!rack) { toast('Select a rack', 'error'); return; }
+  if (!row || row < 1 || row > rack.rows) { toast(`Row must be 1–${rack.rows}`, 'error'); return; }
+  if (!col || col < 1 || col > rack.cols) { toast(`Col must be 1–${rack.cols}`, 'error'); return; }
+
+  // Check slot not already occupied
+  const occupied = bottles.find(b => b.rack == rackId && b.row == row && b.col == col && b.id !== _assignBottleId);
+  if (occupied) { toast(`Slot R${row}C${col} is already taken by "${occupied.name}"`, 'error'); return; }
+
+  await db.bottles.update(_assignBottleId, { rack: rackId, row, col });
+  _assignBottleId = null;
+  closeModal('assign-slot-modal');
+  await loadBottles();
+  renderCollection();
+  renderCellar();
+  githubPush({ silent: true });
+  toast('Slot assigned ✓', 'success');
 }
 
 // ===========================

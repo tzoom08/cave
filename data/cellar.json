@@ -1,6 +1,6 @@
 {
   "version": "1.4.3",
-  "exportedAt": "2026-04-12T20:26:38.350Z",
+  "exportedAt": "2026-04-12T20:27:08.439Z",
   "racks": [
     {
       "id": 1,
@@ -938,6 +938,42 @@
       "score": null,
       "critic": "",
       "notes": ""
+    },
+    {
+      "name": "Faje",
+      "producer": "Delete",
+      "vintage": 2025,
+      "type": "white",
+      "priceTier": "$",
+      "purchasePrice": null,
+      "varietal": null,
+      "region": null,
+      "country": null,
+      "personal": "Blah",
+      "rack": null,
+      "row": null,
+      "col": null,
+      "synced": false,
+      "addedAt": "2026-04-12T20:27:08.418Z",
+      "id": 88
+    },
+    {
+      "name": "Faje",
+      "producer": "Delete",
+      "vintage": 2025,
+      "type": "white",
+      "priceTier": "$",
+      "purchasePrice": null,
+      "varietal": null,
+      "region": null,
+      "country": null,
+      "personal": "Blah",
+      "rack": null,
+      "row": null,
+      "col": null,
+      "synced": false,
+      "addedAt": "2026-04-12T20:27:08.418Z",
+      "id": 89
     }
   ],
   "departed": [

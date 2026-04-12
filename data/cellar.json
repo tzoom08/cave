@@ -1,6 +1,6 @@
 {
-  "version": "1.4.1",
-  "exportedAt": "2026-04-12T20:13:28.878Z",
+  "version": "1.4.3",
+  "exportedAt": "2026-04-12T20:26:38.350Z",
   "racks": [
     {
       "id": 1,
@@ -862,51 +862,61 @@
       "col": 1
     },
     {
+      "id": 84,
       "name": "Soter Estates Chardonnay",
       "producer": "Soter Vineyards",
       "vintage": 2023,
       "type": "white",
       "priceTier": "$$$",
-      "purchasePrice": null,
+      "purchasePrice": 60,
       "personal": null,
       "rack": null,
       "row": null,
       "col": null,
       "synced": false,
       "addedAt": "2026-04-12T20:12:35.138Z",
-      "id": 84
+      "varietal": "Chardonnay",
+      "region": "Oregon",
+      "country": "USA"
     },
     {
+      "id": 85,
       "name": "Soter Estates Chardonnay",
       "producer": "Soter Vineyards",
       "vintage": 2023,
       "type": "white",
       "priceTier": "$$$",
-      "purchasePrice": null,
+      "purchasePrice": 60,
       "personal": null,
       "rack": null,
       "row": null,
       "col": null,
       "synced": false,
       "addedAt": "2026-04-12T20:12:35.138Z",
-      "id": 85
+      "varietal": "Chardonnay",
+      "region": "Oregon",
+      "country": "USA"
     },
     {
+      "id": 86,
       "name": "Soter Estates Chardonnay",
       "producer": "Soter Vineyards",
       "vintage": 2023,
       "type": "white",
       "priceTier": "$$$",
-      "purchasePrice": null,
+      "purchasePrice": 60,
       "personal": null,
       "rack": null,
       "row": null,
       "col": null,
       "synced": false,
       "addedAt": "2026-04-12T20:12:35.138Z",
-      "id": 86
+      "varietal": "Chardonnay",
+      "region": "Oregon",
+      "country": "USA"
     },
     {
+      "id": 87,
       "name": "Soter Estates Chardonnay",
       "producer": "Soter Vineyards",
       "vintage": 2023,
@@ -919,7 +929,6 @@
       "col": null,
       "synced": false,
       "addedAt": "2026-04-12T20:13:28.857Z",
-      "id": 87,
       "varietal": "Chardonnay",
       "region": "Oregon",
       "country": "USA",

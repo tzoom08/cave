@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "exportedAt": "2026-04-27T03:20:42.744Z",
+  "exportedAt": "2026-04-27T03:20:52.849Z",
   "racks": [
     {
       "id": 1,
@@ -1132,9 +1132,9 @@
       "region": null,
       "country": null,
       "personal": null,
-      "rack": null,
-      "row": null,
-      "col": null,
+      "rack": 1,
+      "row": 2,
+      "col": 4,
       "synced": false,
       "addedAt": "2026-04-27T03:18:42.583Z",
       "id": 102

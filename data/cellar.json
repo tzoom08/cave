@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "exportedAt": "2026-04-27T03:15:56.067Z",
+  "exportedAt": "2026-04-27T03:18:42.616Z",
   "racks": [
     {
       "id": 1,
@@ -1120,6 +1120,24 @@
       "col": null,
       "synced": false,
       "addedAt": "2026-04-12T21:47:18.448Z"
+    },
+    {
+      "name": "Casale del Giglio Bellone Lazio",
+      "producer": "Casale del Giglio",
+      "vintage": 2024,
+      "type": "white",
+      "priceTier": "$",
+      "purchasePrice": null,
+      "varietal": "Bellone",
+      "region": null,
+      "country": null,
+      "personal": null,
+      "rack": null,
+      "row": null,
+      "col": null,
+      "synced": false,
+      "addedAt": "2026-04-27T03:18:42.583Z",
+      "id": 102
     }
   ],
   "departed": [

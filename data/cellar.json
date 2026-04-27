@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "exportedAt": "2026-04-27T02:59:54.635Z",
+  "exportedAt": "2026-04-27T03:15:56.067Z",
   "racks": [
     {
       "id": 1,
@@ -775,23 +775,6 @@
       "col": 1
     },
     {
-      "id": 80,
-      "addedAt": "2026-04-11",
-      "synced": false,
-      "name": "Domino de las Abejas",
-      "producer": "Domino de las Abejas",
-      "vintage": 2023,
-      "type": "red",
-      "varietal": "Nebiolo",
-      "region": "Baja California",
-      "country": "Mexico",
-      "quantity": 1,
-      "priceTier": "$",
-      "rack": 1,
-      "row": 2,
-      "col": 4
-    },
-    {
       "id": 81,
       "addedAt": "2026-01-04",
       "synced": false,
@@ -1187,6 +1170,23 @@
       "notes": "Salmon Sunday",
       "addedAt": "2026-04-11",
       "id": 3
+    },
+    {
+      "name": "Domino de las Abejas",
+      "producer": "Domino de las Abejas",
+      "vintage": 2023,
+      "type": "red",
+      "varietal": "Nebiolo",
+      "region": "Baja California",
+      "country": "Mexico",
+      "priceTier": "$",
+      "reason": "Consumed",
+      "departedAt": "2026-04-24",
+      "score": null,
+      "critic": "",
+      "notes": "",
+      "addedAt": "2026-04-11",
+      "id": 4
     }
   ]
 }

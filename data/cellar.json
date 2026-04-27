@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "exportedAt": "2026-04-12T21:51:44.402Z",
+  "exportedAt": "2026-04-27T02:59:54.635Z",
   "racks": [
     {
       "id": 1,
@@ -651,23 +651,6 @@
       "personal": "Gift from Andy Boedo"
     },
     {
-      "id": 72,
-      "addedAt": "2026-04-11",
-      "synced": false,
-      "name": "Table Red",
-      "producer": "Dogliani Superiore",
-      "vintage": 2021,
-      "type": "red",
-      "varietal": "Table Red",
-      "region": "Italy",
-      "country": "Italy",
-      "quantity": 1,
-      "priceTier": "$",
-      "rack": 1,
-      "row": 1,
-      "col": 4
-    },
-    {
       "id": 73,
       "addedAt": "2026-04-11",
       "synced": false,
@@ -1030,6 +1013,7 @@
       "addedAt": "2026-04-12T20:43:48.364Z"
     },
     {
+      "id": 95,
       "name": "Soter Estates Pinot Noir",
       "producer": "Soter Vineyards",
       "vintage": 2024,
@@ -1044,10 +1028,10 @@
       "row": 1,
       "col": 2,
       "synced": false,
-      "addedAt": "2026-04-12T21:19:46.841Z",
-      "id": 95
+      "addedAt": "2026-04-12T21:19:46.841Z"
     },
     {
+      "id": 96,
       "name": "Soter Estates Pinot Noir",
       "producer": "Soter Vineyards",
       "vintage": 2024,
@@ -1062,10 +1046,10 @@
       "row": 1,
       "col": 1,
       "synced": false,
-      "addedAt": "2026-04-12T21:19:46.845Z",
-      "id": 96
+      "addedAt": "2026-04-12T21:19:46.845Z"
     },
     {
+      "id": 97,
       "name": "Soter Estates Pinot Noir",
       "producer": "Soter Vineyards",
       "vintage": 2024,
@@ -1080,10 +1064,10 @@
       "row": 1,
       "col": 1,
       "synced": false,
-      "addedAt": "2026-04-12T21:19:46.845Z",
-      "id": 97
+      "addedAt": "2026-04-12T21:19:46.845Z"
     },
     {
+      "id": 98,
       "name": "The Wedding Tree",
       "producer": "Medlock Ames",
       "vintage": 2021,
@@ -1098,10 +1082,10 @@
       "row": null,
       "col": null,
       "synced": false,
-      "addedAt": "2026-04-12T21:44:03.275Z",
-      "id": 98
+      "addedAt": "2026-04-12T21:44:03.275Z"
     },
     {
+      "id": 99,
       "name": "Burning Daylight",
       "producer": "Medlock Ames",
       "vintage": 2023,
@@ -1116,10 +1100,10 @@
       "row": null,
       "col": null,
       "synced": false,
-      "addedAt": "2026-04-12T21:45:05.221Z",
-      "id": 99
+      "addedAt": "2026-04-12T21:45:05.221Z"
     },
     {
+      "id": 100,
       "name": "Fifty Tons",
       "producer": "Medlock Ames",
       "vintage": 2020,
@@ -1134,10 +1118,10 @@
       "row": null,
       "col": null,
       "synced": false,
-      "addedAt": "2026-04-12T21:46:02.692Z",
-      "id": 100
+      "addedAt": "2026-04-12T21:46:02.692Z"
     },
     {
+      "id": 101,
       "name": "My Sister Charlie",
       "producer": "Medlock Ames",
       "vintage": 2023,
@@ -1152,8 +1136,7 @@
       "row": null,
       "col": null,
       "synced": false,
-      "addedAt": "2026-04-12T21:47:18.448Z",
-      "id": 101
+      "addedAt": "2026-04-12T21:47:18.448Z"
     }
   ],
   "departed": [
@@ -1187,6 +1170,23 @@
       "critic": "",
       "notes": "",
       "addedAt": "2026-03-01T01:05:09.814Z"
+    },
+    {
+      "name": "Table Red",
+      "producer": "Dogliani Superiore",
+      "vintage": 2021,
+      "type": "red",
+      "varietal": "Table Red",
+      "region": "Italy",
+      "country": "Italy",
+      "priceTier": "$",
+      "reason": "Consumed",
+      "departedAt": "2026-04-27",
+      "score": null,
+      "critic": "",
+      "notes": "Salmon Sunday",
+      "addedAt": "2026-04-11",
+      "id": 3
     }
   ]
 }

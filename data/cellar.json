@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "exportedAt": "2026-04-27T03:20:52.849Z",
+  "exportedAt": "2026-04-29T02:00:33.767Z",
   "racks": [
     {
       "id": 1,
@@ -1032,24 +1032,6 @@
       "addedAt": "2026-04-12T21:19:46.845Z"
     },
     {
-      "id": 97,
-      "name": "Soter Estates Pinot Noir",
-      "producer": "Soter Vineyards",
-      "vintage": 2024,
-      "type": "red",
-      "priceTier": "$$$",
-      "purchasePrice": 60,
-      "varietal": "Pinot Noir",
-      "region": "Oregon",
-      "country": "USA",
-      "personal": null,
-      "rack": 1,
-      "row": 1,
-      "col": 1,
-      "synced": false,
-      "addedAt": "2026-04-12T21:19:46.845Z"
-    },
-    {
       "id": 98,
       "name": "The Wedding Tree",
       "producer": "Medlock Ames",
@@ -1122,6 +1104,7 @@
       "addedAt": "2026-04-12T21:47:18.448Z"
     },
     {
+      "id": 102,
       "name": "Casale del Giglio Bellone Lazio",
       "producer": "Casale del Giglio",
       "vintage": 2024,
@@ -1136,10 +1119,10 @@
       "row": 2,
       "col": 4,
       "synced": false,
-      "addedAt": "2026-04-27T03:18:42.583Z",
-      "id": 102
+      "addedAt": "2026-04-27T03:18:42.583Z"
     },
     {
+      "id": 103,
       "name": "A Coroa Godell",
       "producer": "A Corra",
       "vintage": 2024,
@@ -1154,8 +1137,7 @@
       "row": 1,
       "col": 4,
       "synced": false,
-      "addedAt": "2026-04-27T03:20:04.857Z",
-      "id": 103
+      "addedAt": "2026-04-27T03:20:04.857Z"
     }
   ],
   "departed": [
@@ -1191,6 +1173,7 @@
       "addedAt": "2026-03-01T01:05:09.814Z"
     },
     {
+      "id": 3,
       "name": "Table Red",
       "producer": "Dogliani Superiore",
       "vintage": 2021,
@@ -1204,10 +1187,10 @@
       "score": null,
       "critic": "",
       "notes": "Salmon Sunday",
-      "addedAt": "2026-04-11",
-      "id": 3
+      "addedAt": "2026-04-11"
     },
     {
+      "id": 4,
       "name": "Domino de las Abejas",
       "producer": "Domino de las Abejas",
       "vintage": 2023,
@@ -1221,8 +1204,25 @@
       "score": null,
       "critic": "",
       "notes": "",
-      "addedAt": "2026-04-11",
-      "id": 4
+      "addedAt": "2026-04-11"
+    },
+    {
+      "name": "Soter Estates Pinot Noir",
+      "producer": "Soter Vineyards",
+      "vintage": 2024,
+      "type": "red",
+      "varietal": "Pinot Noir",
+      "region": "Oregon",
+      "country": "USA",
+      "purchasePrice": 60,
+      "priceTier": "$$$",
+      "reason": "Consumed",
+      "departedAt": "2026-04-29",
+      "score": null,
+      "critic": "",
+      "notes": "Fantastic vintage",
+      "addedAt": "2026-04-12T21:19:46.845Z",
+      "id": 5
     }
   ]
 }

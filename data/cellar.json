@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "exportedAt": "2026-05-09T20:52:00.820Z",
+  "exportedAt": "2026-05-09T20:53:02.933Z",
   "racks": [
     {
       "id": 1,
@@ -384,9 +384,9 @@
       "marketValue": 55,
       "quantity": 1,
       "priceTier": "$$$",
-      "rack": 2,
-      "row": 6,
-      "col": 2
+      "rack": null,
+      "row": null,
+      "col": null
     },
     {
       "id": 57,
@@ -927,9 +927,9 @@
       "region": "Oregon",
       "country": "USA",
       "personal": null,
-      "rack": null,
-      "row": null,
-      "col": null,
+      "rack": 1,
+      "row": 1,
+      "col": 4,
       "synced": false,
       "addedAt": "2026-04-12T20:43:48.359Z"
     },

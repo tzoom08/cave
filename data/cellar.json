@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "exportedAt": "2026-05-04T03:02:58.880Z",
+  "exportedAt": "2026-05-09T20:52:00.820Z",
   "racks": [
     {
       "id": 1,
@@ -73,9 +73,9 @@
       "marketValue": 45,
       "quantity": 1,
       "priceTier": "$$",
-      "rack": 2,
-      "row": 3,
-      "col": 4
+      "rack": null,
+      "row": null,
+      "col": null
     },
     {
       "id": 40,
@@ -404,23 +404,6 @@
       "rack": 2,
       "row": 6,
       "col": 3
-    },
-    {
-      "id": 58,
-      "addedAt": "2026-04-11",
-      "synced": false,
-      "name": "Lemelson White",
-      "producer": "Lemelson Vineyards",
-      "vintage": 2024,
-      "type": "white",
-      "varietal": "White Pinot Noir",
-      "region": "Oregon",
-      "country": "USA",
-      "quantity": 1,
-      "priceTier": "$$",
-      "rack": 2,
-      "row": 6,
-      "col": 4
     },
     {
       "id": 59,
@@ -1111,24 +1094,6 @@
       "col": 4,
       "synced": false,
       "addedAt": "2026-04-27T03:18:42.583Z"
-    },
-    {
-      "id": 103,
-      "name": "A Coroa Godell",
-      "producer": "A Corra",
-      "vintage": 2024,
-      "type": "white",
-      "priceTier": "$",
-      "purchasePrice": null,
-      "varietal": "Godello",
-      "region": "Italy",
-      "country": "Italy",
-      "personal": null,
-      "rack": 1,
-      "row": 1,
-      "col": 4,
-      "synced": false,
-      "addedAt": "2026-04-27T03:20:04.857Z"
     }
   ],
   "departed": [
@@ -1216,6 +1181,7 @@
       "addedAt": "2026-04-12T21:19:46.845Z"
     },
     {
+      "id": 6,
       "name": "Brave & Maiden Estate",
       "producer": "Brave & Maiden",
       "vintage": 2021,
@@ -1229,8 +1195,42 @@
       "score": null,
       "critic": "",
       "notes": "",
+      "addedAt": "2026-04-11"
+    },
+    {
+      "name": "Lemelson White",
+      "producer": "Lemelson Vineyards",
+      "vintage": 2024,
+      "type": "white",
+      "varietal": "White Pinot Noir",
+      "region": "Oregon",
+      "country": "USA",
+      "priceTier": "$$",
+      "reason": "Consumed",
+      "departedAt": "2026-05-09",
+      "score": null,
+      "critic": "",
+      "notes": "Had Chris and Andy over for drinks",
       "addedAt": "2026-04-11",
-      "id": 6
+      "id": 7
+    },
+    {
+      "name": "A Coroa Godell",
+      "producer": "A Corra",
+      "vintage": 2024,
+      "type": "white",
+      "varietal": "Godello",
+      "region": "Italy",
+      "country": "Italy",
+      "purchasePrice": null,
+      "priceTier": "$",
+      "reason": "Consumed",
+      "departedAt": "2026-05-09",
+      "score": null,
+      "critic": "",
+      "notes": "",
+      "addedAt": "2026-04-27T03:20:04.857Z",
+      "id": 8
     }
   ]
 }

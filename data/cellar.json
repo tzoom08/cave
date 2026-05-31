@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "exportedAt": "2026-05-31T23:54:58.529Z",
+  "exportedAt": "2026-05-31T23:56:13.595Z",
   "racks": [
     {
       "id": 1,
@@ -1115,24 +1115,6 @@
       "addedAt": "2026-05-28T03:45:53.392Z"
     },
     {
-      "id": 108,
-      "name": "Fort Ross-Seaview Pinot Noir",
-      "producer": "Flowers",
-      "vintage": 2024,
-      "type": "red",
-      "priceTier": "$$$",
-      "purchasePrice": 75,
-      "varietal": "Pinot Noir",
-      "region": "Sonoma Coast",
-      "country": "United States",
-      "personal": null,
-      "rack": null,
-      "row": null,
-      "col": null,
-      "synced": false,
-      "addedAt": "2026-05-28T03:45:53.392Z"
-    },
-    {
       "id": 109,
       "name": "Fort Ross-Seaview Pinot Noir",
       "producer": "Flowers",
@@ -1144,9 +1126,9 @@
       "region": "Sonoma Coast",
       "country": "United States",
       "personal": null,
-      "rack": null,
-      "row": null,
-      "col": null,
+      "rack": 1,
+      "row": 2,
+      "col": 4,
       "synced": false,
       "addedAt": "2026-05-28T03:45:53.392Z"
     }
@@ -1339,6 +1321,24 @@
       "notes": "",
       "addedAt": "2026-04-27T03:18:42.583Z",
       "id": 11
+    },
+    {
+      "name": "Fort Ross-Seaview Pinot Noir",
+      "producer": "Flowers",
+      "vintage": 2024,
+      "type": "red",
+      "varietal": "Pinot Noir",
+      "region": "Sonoma Coast",
+      "country": "United States",
+      "purchasePrice": 75,
+      "priceTier": "$$$",
+      "reason": "Consumed",
+      "departedAt": "2026-05-31",
+      "score": null,
+      "critic": "",
+      "notes": "",
+      "addedAt": "2026-05-28T03:45:53.392Z",
+      "id": 12
     }
   ]
 }

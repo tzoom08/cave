@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "exportedAt": "2026-05-28T03:45:53.440Z",
+  "exportedAt": "2026-05-31T23:54:58.529Z",
   "racks": [
     {
       "id": 1,
@@ -1043,24 +1043,7 @@
       "addedAt": "2026-04-12T21:47:18.448Z"
     },
     {
-      "id": 102,
-      "name": "Casale del Giglio Bellone Lazio",
-      "producer": "Casale del Giglio",
-      "vintage": 2024,
-      "type": "white",
-      "priceTier": "$",
-      "purchasePrice": null,
-      "varietal": "Bellone",
-      "region": null,
-      "country": null,
-      "personal": null,
-      "rack": 1,
-      "row": 2,
-      "col": 4,
-      "synced": false,
-      "addedAt": "2026-04-27T03:18:42.583Z"
-    },
-    {
+      "id": 104,
       "name": "Fort Ross-Seaview Pinot Noir",
       "producer": "Flowers",
       "vintage": 2024,
@@ -1075,10 +1058,10 @@
       "row": null,
       "col": null,
       "synced": false,
-      "addedAt": "2026-05-28T03:45:53.392Z",
-      "id": 104
+      "addedAt": "2026-05-28T03:45:53.392Z"
     },
     {
+      "id": 105,
       "name": "Fort Ross-Seaview Pinot Noir",
       "producer": "Flowers",
       "vintage": 2024,
@@ -1093,10 +1076,10 @@
       "row": null,
       "col": null,
       "synced": false,
-      "addedAt": "2026-05-28T03:45:53.392Z",
-      "id": 105
+      "addedAt": "2026-05-28T03:45:53.392Z"
     },
     {
+      "id": 106,
       "name": "Fort Ross-Seaview Pinot Noir",
       "producer": "Flowers",
       "vintage": 2024,
@@ -1111,10 +1094,10 @@
       "row": null,
       "col": null,
       "synced": false,
-      "addedAt": "2026-05-28T03:45:53.392Z",
-      "id": 106
+      "addedAt": "2026-05-28T03:45:53.392Z"
     },
     {
+      "id": 107,
       "name": "Fort Ross-Seaview Pinot Noir",
       "producer": "Flowers",
       "vintage": 2024,
@@ -1129,10 +1112,10 @@
       "row": null,
       "col": null,
       "synced": false,
-      "addedAt": "2026-05-28T03:45:53.392Z",
-      "id": 107
+      "addedAt": "2026-05-28T03:45:53.392Z"
     },
     {
+      "id": 108,
       "name": "Fort Ross-Seaview Pinot Noir",
       "producer": "Flowers",
       "vintage": 2024,
@@ -1147,10 +1130,10 @@
       "row": null,
       "col": null,
       "synced": false,
-      "addedAt": "2026-05-28T03:45:53.392Z",
-      "id": 108
+      "addedAt": "2026-05-28T03:45:53.392Z"
     },
     {
+      "id": 109,
       "name": "Fort Ross-Seaview Pinot Noir",
       "producer": "Flowers",
       "vintage": 2024,
@@ -1165,8 +1148,7 @@
       "row": null,
       "col": null,
       "synced": false,
-      "addedAt": "2026-05-28T03:45:53.392Z",
-      "id": 109
+      "addedAt": "2026-05-28T03:45:53.392Z"
     }
   ],
   "departed": [
@@ -1339,6 +1321,24 @@
       "critic": "",
       "notes": "",
       "addedAt": "2026-04-12T20:29:05.925Z"
+    },
+    {
+      "name": "Casale del Giglio Bellone Lazio",
+      "producer": "Casale del Giglio",
+      "vintage": 2024,
+      "type": "white",
+      "varietal": "Bellone",
+      "region": null,
+      "country": null,
+      "purchasePrice": null,
+      "priceTier": "$",
+      "reason": "Consumed",
+      "departedAt": "2026-05-31",
+      "score": null,
+      "critic": "",
+      "notes": "",
+      "addedAt": "2026-04-27T03:18:42.583Z",
+      "id": 11
     }
   ]
 }

@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "exportedAt": "2026-05-31T23:56:13.595Z",
+  "exportedAt": "2026-06-07T02:16:45.050Z",
   "racks": [
     {
       "id": 1,
@@ -1131,6 +1131,78 @@
       "col": 4,
       "synced": false,
       "addedAt": "2026-05-28T03:45:53.392Z"
+    },
+    {
+      "name": "Ribbon Ridge",
+      "producer": "Soter Vineyards",
+      "vintage": 2024,
+      "type": "red",
+      "priceTier": "$$$",
+      "purchasePrice": 75,
+      "varietal": "Pinot Noir",
+      "region": "Oregon",
+      "country": "USA",
+      "personal": null,
+      "rack": null,
+      "row": null,
+      "col": null,
+      "synced": false,
+      "addedAt": "2026-06-07T02:16:44.994Z",
+      "id": 110
+    },
+    {
+      "name": "Ribbon Ridge",
+      "producer": "Soter Vineyards",
+      "vintage": 2024,
+      "type": "red",
+      "priceTier": "$$$",
+      "purchasePrice": 75,
+      "varietal": "Pinot Noir",
+      "region": "Oregon",
+      "country": "USA",
+      "personal": null,
+      "rack": null,
+      "row": null,
+      "col": null,
+      "synced": false,
+      "addedAt": "2026-06-07T02:16:44.994Z",
+      "id": 111
+    },
+    {
+      "name": "Ribbon Ridge",
+      "producer": "Soter Vineyards",
+      "vintage": 2024,
+      "type": "red",
+      "priceTier": "$$$",
+      "purchasePrice": 75,
+      "varietal": "Pinot Noir",
+      "region": "Oregon",
+      "country": "USA",
+      "personal": null,
+      "rack": null,
+      "row": null,
+      "col": null,
+      "synced": false,
+      "addedAt": "2026-06-07T02:16:44.994Z",
+      "id": 112
+    },
+    {
+      "name": "Ribbon Ridge",
+      "producer": "Soter Vineyards",
+      "vintage": 2024,
+      "type": "red",
+      "priceTier": "$$$",
+      "purchasePrice": 75,
+      "varietal": "Pinot Noir",
+      "region": "Oregon",
+      "country": "USA",
+      "personal": null,
+      "rack": null,
+      "row": null,
+      "col": null,
+      "synced": false,
+      "addedAt": "2026-06-07T02:16:44.994Z",
+      "id": 113
     }
   ],
   "departed": [
@@ -1305,6 +1377,7 @@
       "addedAt": "2026-04-12T20:29:05.925Z"
     },
     {
+      "id": 11,
       "name": "Casale del Giglio Bellone Lazio",
       "producer": "Casale del Giglio",
       "vintage": 2024,
@@ -1319,10 +1392,10 @@
       "score": null,
       "critic": "",
       "notes": "",
-      "addedAt": "2026-04-27T03:18:42.583Z",
-      "id": 11
+      "addedAt": "2026-04-27T03:18:42.583Z"
     },
     {
+      "id": 12,
       "name": "Fort Ross-Seaview Pinot Noir",
       "producer": "Flowers",
       "vintage": 2024,
@@ -1337,8 +1410,7 @@
       "score": null,
       "critic": "",
       "notes": "",
-      "addedAt": "2026-05-28T03:45:53.392Z",
-      "id": 12
+      "addedAt": "2026-05-28T03:45:53.392Z"
     }
   ]
 }

@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "exportedAt": "2026-06-07T02:18:12.432Z",
+  "exportedAt": "2026-06-07T02:19:15.749Z",
   "racks": [
     {
       "id": 1,
@@ -1257,6 +1257,42 @@
       "synced": false,
       "addedAt": "2026-06-07T02:18:12.406Z",
       "id": 117
+    },
+    {
+      "name": "Dundee Hills",
+      "producer": "Soter Vineyards",
+      "vintage": 2024,
+      "type": "red",
+      "priceTier": "$$$",
+      "purchasePrice": 75,
+      "varietal": "Pinot Noir",
+      "region": "Oregon",
+      "country": "USA",
+      "personal": null,
+      "rack": null,
+      "row": null,
+      "col": null,
+      "synced": false,
+      "addedAt": "2026-06-07T02:19:15.709Z",
+      "id": 118
+    },
+    {
+      "name": "Dundee Hills",
+      "producer": "Soter Vineyards",
+      "vintage": 2024,
+      "type": "red",
+      "priceTier": "$$$",
+      "purchasePrice": 75,
+      "varietal": "Pinot Noir",
+      "region": "Oregon",
+      "country": "USA",
+      "personal": null,
+      "rack": null,
+      "row": null,
+      "col": null,
+      "synced": false,
+      "addedAt": "2026-06-07T02:19:15.709Z",
+      "id": 119
     }
   ],
   "departed": [

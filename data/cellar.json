@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "exportedAt": "2026-06-07T02:28:10.610Z",
+  "exportedAt": "2026-06-07T02:28:40.632Z",
   "racks": [
     {
       "id": 1,
@@ -1078,7 +1078,8 @@
       "purchasePrice": 100,
       "quantity": 2,
       "priceTier": "$$$$",
-      "id": 181
+      "id": 181,
+      "personal": null
     },
     {
       "addedAt": "2026-04-27T03:20:04.857Z",
@@ -1307,6 +1308,25 @@
       "score": 2026,
       "rack": 2026,
       "id": 197
+    },
+    {
+      "addedAt": "2026-06-07T02:28:40.608Z",
+      "synced": false,
+      "name": "Mineral Springs",
+      "producer": "Soter Vineyards",
+      "vintage": 2023,
+      "type": "white",
+      "varietal": "Chardonnay",
+      "region": "Oregon",
+      "country": "USA",
+      "purchasePrice": 100,
+      "quantity": 2,
+      "priceTier": "$$$$",
+      "personal": null,
+      "rack": null,
+      "row": null,
+      "col": null,
+      "id": 198
     }
   ],
   "departed": [

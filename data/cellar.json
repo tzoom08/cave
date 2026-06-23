@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "exportedAt": "2026-06-07T02:31:41.912Z",
+  "exportedAt": "2026-06-23T01:58:37.957Z",
   "racks": [
     {
       "id": 1,
@@ -23,6 +23,7 @@
   ],
   "bottles": [
     {
+      "id": 122,
       "addedAt": "2026-02-28",
       "synced": false,
       "name": "Soter Pinot",
@@ -38,10 +39,10 @@
       "priceTier": "$$",
       "rack": 2,
       "row": 3,
-      "col": 1,
-      "id": 122
+      "col": 1
     },
     {
+      "id": 123,
       "addedAt": "2026-02-28",
       "synced": false,
       "name": "Brenner Chardonnay",
@@ -58,10 +59,10 @@
       "rack": 2,
       "row": 2,
       "col": 1,
-      "personal": "With Chris and Andy",
-      "id": 123
+      "personal": "With Chris and Andy"
     },
     {
+      "id": 124,
       "addedAt": "2026-02-28",
       "synced": false,
       "name": "Soter Brut Rose",
@@ -77,10 +78,10 @@
       "priceTier": "$$$",
       "rack": 2,
       "row": 2,
-      "col": 2,
-      "id": 124
+      "col": 2
     },
     {
+      "id": 125,
       "addedAt": "2026-02-28",
       "synced": false,
       "name": "Coursey Graves Chardonnay",
@@ -94,10 +95,10 @@
       "priceTier": "$$",
       "rack": 2,
       "row": 1,
-      "col": 3,
-      "id": 125
+      "col": 3
     },
     {
+      "id": 126,
       "addedAt": "2026-02-28",
       "synced": false,
       "name": "Aperature Sauv Blanc",
@@ -111,10 +112,10 @@
       "priceTier": "$$",
       "rack": 2,
       "row": 2,
-      "col": 3,
-      "id": 126
+      "col": 3
     },
     {
+      "id": 127,
       "addedAt": "2026-02-28",
       "synced": false,
       "name": "Aperature Chenin Blanc",
@@ -128,10 +129,10 @@
       "priceTier": "$$",
       "rack": 2,
       "row": 2,
-      "col": 4,
-      "id": 127
+      "col": 4
     },
     {
+      "id": 128,
       "addedAt": "2026-02-28",
       "synced": false,
       "name": "Domaine Carneros Blanc de Noir",
@@ -145,10 +146,10 @@
       "priceTier": "$$$",
       "rack": 2,
       "row": 3,
-      "col": 2,
-      "id": 128
+      "col": 2
     },
     {
+      "id": 129,
       "addedAt": "2026-02-28",
       "synced": false,
       "name": "Soter Brut Rose",
@@ -164,10 +165,10 @@
       "priceTier": "$$$",
       "rack": 2,
       "row": 3,
-      "col": 3,
-      "id": 129
+      "col": 3
     },
     {
+      "id": 130,
       "addedAt": "2026-02-28",
       "synced": false,
       "name": "Works & Days Pinot",
@@ -181,10 +182,10 @@
       "priceTier": "$",
       "rack": 1,
       "row": 1,
-      "col": 1,
-      "id": 130
+      "col": 1
     },
     {
+      "id": 131,
       "addedAt": "2026-05-04T02:59:22.660Z",
       "synced": false,
       "name": "Paolo Scavino Sorriso",
@@ -198,10 +199,10 @@
       "priceTier": "$",
       "rack": 2,
       "row": 4,
-      "col": 2,
-      "id": 131
+      "col": 2
     },
     {
+      "id": 132,
       "addedAt": "2026-02-28",
       "synced": false,
       "name": "Soter Origin Pinot",
@@ -217,10 +218,10 @@
       "priceTier": "$$$",
       "rack": 2,
       "row": 4,
-      "col": 3,
-      "id": 132
+      "col": 3
     },
     {
+      "id": 133,
       "addedAt": "2026-02-28",
       "synced": false,
       "name": "La Sirena Rosato",
@@ -234,10 +235,10 @@
       "priceTier": "$$",
       "rack": 2,
       "row": 4,
-      "col": 4,
-      "id": 133
+      "col": 4
     },
     {
+      "id": 134,
       "addedAt": "2026-04-11",
       "synced": false,
       "name": "Mineral Springs Ranch",
@@ -253,10 +254,10 @@
       "priceTier": "$$$",
       "rack": 2,
       "row": 5,
-      "col": 1,
-      "id": 134
+      "col": 1
     },
     {
+      "id": 135,
       "addedAt": "2026-04-11",
       "synced": false,
       "name": "Laporte",
@@ -270,10 +271,10 @@
       "priceTier": "$",
       "rack": 2,
       "row": 5,
-      "col": 2,
-      "id": 135
+      "col": 2
     },
     {
+      "id": 136,
       "addedAt": "2026-04-11",
       "synced": false,
       "name": "Tiberio",
@@ -287,10 +288,10 @@
       "priceTier": "$",
       "rack": 2,
       "row": 5,
-      "col": 3,
-      "id": 136
+      "col": 3
     },
     {
+      "id": 137,
       "addedAt": "2026-04-11",
       "synced": false,
       "name": "Campanelli",
@@ -304,10 +305,10 @@
       "priceTier": "$",
       "rack": 2,
       "row": 5,
-      "col": 4,
-      "id": 137
+      "col": 4
     },
     {
+      "id": 138,
       "addedAt": "2026-04-11",
       "synced": false,
       "name": "Sonoma Coast Chardonnay",
@@ -323,10 +324,10 @@
       "priceTier": "$$$",
       "rack": 2,
       "row": 6,
-      "col": 1,
-      "id": 138
+      "col": 1
     },
     {
+      "id": 139,
       "addedAt": "2026-04-11",
       "synced": false,
       "name": "Westerly Reserve",
@@ -340,10 +341,10 @@
       "priceTier": "$$",
       "rack": 2,
       "row": 6,
-      "col": 3,
-      "id": 139
+      "col": 3
     },
     {
+      "id": 140,
       "addedAt": "2026-04-11",
       "synced": false,
       "name": "Franzia Cabernet Sauvignon",
@@ -357,10 +358,10 @@
       "priceTier": "$",
       "rack": 2,
       "row": 7,
-      "col": 1,
-      "id": 140
+      "col": 1
     },
     {
+      "id": 141,
       "addedAt": "2026-04-11",
       "synced": false,
       "name": "Fort Ross Seaview",
@@ -376,10 +377,10 @@
       "priceTier": "$$",
       "rack": 2,
       "row": 7,
-      "col": 2,
-      "id": 141
+      "col": 2
     },
     {
+      "id": 142,
       "addedAt": "2026-04-11",
       "synced": false,
       "name": "Russian River Valley",
@@ -395,10 +396,10 @@
       "priceTier": "$$$",
       "rack": 2,
       "row": 7,
-      "col": 3,
-      "id": 142
+      "col": 3
     },
     {
+      "id": 143,
       "addedAt": "2026-04-11",
       "synced": false,
       "name": "Russian River Valley",
@@ -414,10 +415,10 @@
       "priceTier": "$$$",
       "rack": 2,
       "row": 7,
-      "col": 4,
-      "id": 143
+      "col": 4
     },
     {
+      "id": 144,
       "addedAt": "2026-04-11",
       "synced": false,
       "name": "Mineral Springs Ranch",
@@ -433,10 +434,10 @@
       "priceTier": "$$$",
       "rack": 3,
       "row": 2,
-      "col": 1,
-      "id": 144
+      "col": 1
     },
     {
+      "id": 145,
       "addedAt": "2026-04-11",
       "synced": false,
       "name": "Soter Brut Rose",
@@ -452,10 +453,10 @@
       "priceTier": "$$$",
       "rack": 3,
       "row": 2,
-      "col": 2,
-      "id": 145
+      "col": 2
     },
     {
+      "id": 146,
       "addedAt": "2026-04-11",
       "synced": false,
       "name": "Elem Special Edition",
@@ -469,10 +470,10 @@
       "priceTier": "$",
       "rack": 3,
       "row": 2,
-      "col": 3,
-      "id": 146
+      "col": 3
     },
     {
+      "id": 147,
       "addedAt": "2026-04-11",
       "synced": false,
       "name": "Chocolate Splash",
@@ -486,10 +487,10 @@
       "rack": 3,
       "row": 2,
       "col": 4,
-      "personal": "From Andrew Saleh",
-      "id": 147
+      "personal": "From Andrew Saleh"
     },
     {
+      "id": 148,
       "addedAt": "2026-04-11",
       "synced": false,
       "name": "Gran Reserva",
@@ -503,10 +504,10 @@
       "priceTier": "$$$",
       "rack": 3,
       "row": 3,
-      "col": 1,
-      "id": 148
+      "col": 1
     },
     {
+      "id": 149,
       "addedAt": "2026-04-11",
       "synced": false,
       "name": "Vinho de Talha",
@@ -521,10 +522,10 @@
       "rack": 3,
       "row": 3,
       "col": 2,
-      "personal": "Nick’s purchase on 2022 trip (visited the winery)",
-      "id": 149
+      "personal": "Nick’s purchase on 2022 trip (visited the winery)"
     },
     {
+      "id": 150,
       "addedAt": "2026-04-11",
       "synced": false,
       "name": "Quinta Dos Murcas",
@@ -539,10 +540,10 @@
       "rack": 3,
       "row": 3,
       "col": 3,
-      "personal": "Trent’s purchase on 2022 trip (visited the winery)",
-      "id": 150
+      "personal": "Trent’s purchase on 2022 trip (visited the winery)"
     },
     {
+      "id": 151,
       "addedAt": "2026-04-11",
       "synced": false,
       "name": "Esparao Alentejo",
@@ -557,10 +558,10 @@
       "rack": 3,
       "row": 3,
       "col": 4,
-      "personal": "Trent’s purchase on 2022 trip (visited the winery)",
-      "id": 151
+      "personal": "Trent’s purchase on 2022 trip (visited the winery)"
     },
     {
+      "id": 152,
       "addedAt": "2026-04-11",
       "synced": false,
       "name": "Gran Reserva",
@@ -575,10 +576,10 @@
       "rack": 3,
       "row": 4,
       "col": 1,
-      "personal": "Gift from Andy Boedo",
-      "id": 152
+      "personal": "Gift from Andy Boedo"
     },
     {
+      "id": 153,
       "addedAt": "2026-04-11",
       "synced": false,
       "name": "Chinon Rive Gauche",
@@ -592,10 +593,10 @@
       "priceTier": "$",
       "rack": 3,
       "row": 4,
-      "col": 3,
-      "id": 153
+      "col": 3
     },
     {
+      "id": 154,
       "addedAt": "2026-04-11",
       "synced": false,
       "name": "I. Brand & Family",
@@ -609,10 +610,10 @@
       "priceTier": "$$",
       "rack": 3,
       "row": 4,
-      "col": 4,
-      "id": 154
+      "col": 4
     },
     {
+      "id": 155,
       "addedAt": "2026-04-11",
       "synced": false,
       "name": "Pine Mountain Estate Reserve",
@@ -626,10 +627,10 @@
       "priceTier": "$$",
       "rack": 3,
       "row": 5,
-      "col": 1,
-      "id": 155
+      "col": 1
     },
     {
+      "id": 156,
       "addedAt": "2026-04-11",
       "synced": false,
       "name": "Muscardini",
@@ -643,10 +644,10 @@
       "priceTier": "$$",
       "rack": 3,
       "row": 5,
-      "col": 3,
-      "id": 156
+      "col": 3
     },
     {
+      "id": 157,
       "addedAt": "2026-01-04",
       "synced": false,
       "name": "Late Harvest Chardonnay",
@@ -663,10 +664,10 @@
       "rack": 3,
       "row": 5,
       "col": 4,
-      "personal": "Dessert wine (?) Bought with Chris and Andy",
-      "id": 157
+      "personal": "Dessert wine (?) Bought with Chris and Andy"
     },
     {
+      "id": 158,
       "addedAt": "2026-04-11",
       "synced": false,
       "name": "Mercury Head",
@@ -682,10 +683,10 @@
       "priceTier": "$$$$",
       "rack": 3,
       "row": 6,
-      "col": 1,
-      "id": 158
+      "col": 1
     },
     {
+      "id": 159,
       "addedAt": "2026-01-04",
       "synced": false,
       "name": "Bremer Merlot",
@@ -702,10 +703,10 @@
       "rack": 3,
       "row": 6,
       "col": 3,
-      "personal": "Bought with Chris and Andy",
-      "id": 159
+      "personal": "Bought with Chris and Andy"
     },
     {
+      "id": 160,
       "addedAt": "2026-04-11",
       "synced": false,
       "name": "Terre",
@@ -719,10 +720,10 @@
       "priceTier": "$",
       "rack": 3,
       "row": 6,
-      "col": 4,
-      "id": 160
+      "col": 4
     },
     {
+      "id": 161,
       "addedAt": "2026-04-12T20:12:35.138Z",
       "synced": false,
       "name": "Soter Estates Chardonnay",
@@ -737,10 +738,10 @@
       "priceTier": "$$$",
       "rack": 3,
       "row": 6,
-      "col": 2,
-      "id": 161
+      "col": 2
     },
     {
+      "id": 162,
       "addedAt": "2026-04-12T20:12:35.138Z",
       "synced": false,
       "name": "Soter Estates Chardonnay",
@@ -755,10 +756,10 @@
       "priceTier": "$$$",
       "rack": 3,
       "row": 1,
-      "col": 3,
-      "id": 162
+      "col": 3
     },
     {
+      "id": 163,
       "addedAt": "2026-04-12T20:12:35.138Z",
       "synced": false,
       "name": "Soter Estates Chardonnay",
@@ -773,10 +774,10 @@
       "priceTier": "$$$",
       "rack": 3,
       "row": 7,
-      "col": 2,
-      "id": 163
+      "col": 2
     },
     {
+      "id": 164,
       "addedAt": "2026-04-12T20:13:28.857Z",
       "synced": false,
       "name": "Soter Estates Chardonnay",
@@ -790,28 +791,10 @@
       "priceTier": "$$$",
       "rack": 3,
       "row": 7,
-      "col": 4,
-      "id": 164
+      "col": 4
     },
     {
-      "addedAt": "2026-04-12T20:43:48.359Z",
-      "synced": false,
-      "name": "Soter Estates Pinot Noir",
-      "producer": "Soter Vineyards",
-      "vintage": 2024,
-      "type": "red",
-      "varietal": "Pinot Noir",
-      "region": "Oregon",
-      "country": "USA",
-      "purchasePrice": 60,
-      "quantity": 1,
-      "priceTier": "$$$",
-      "rack": 1,
-      "row": 1,
-      "col": 4,
-      "id": 165
-    },
-    {
+      "id": 166,
       "addedAt": "2026-04-12T20:43:48.364Z",
       "synced": false,
       "name": "Soter Estates Pinot Noir",
@@ -826,10 +809,10 @@
       "priceTier": "$$$",
       "rack": 3,
       "row": 5,
-      "col": 2,
-      "id": 166
+      "col": 2
     },
     {
+      "id": 167,
       "addedAt": "2026-04-12T21:19:46.841Z",
       "synced": false,
       "name": "Soter Estates Pinot Noir",
@@ -844,10 +827,10 @@
       "priceTier": "$$$",
       "rack": 2,
       "row": 1,
-      "col": 2,
-      "id": 167
+      "col": 2
     },
     {
+      "id": 168,
       "addedAt": "2026-04-12T21:19:46.845Z",
       "synced": false,
       "name": "Soter Estates Pinot Noir",
@@ -862,10 +845,10 @@
       "priceTier": "$$$",
       "rack": 2,
       "row": 1,
-      "col": 1,
-      "id": 168
+      "col": 1
     },
     {
+      "id": 169,
       "addedAt": "2026-04-12T21:44:03.275Z",
       "synced": false,
       "name": "The Wedding Tree",
@@ -880,10 +863,10 @@
       "rack": 2,
       "row": 6,
       "col": 4,
-      "personal": "Winery visit",
-      "id": 169
+      "personal": "Winery visit"
     },
     {
+      "id": 170,
       "addedAt": "2026-04-12T21:45:05.221Z",
       "synced": false,
       "name": "Burning Daylight",
@@ -898,10 +881,10 @@
       "rack": 3,
       "row": 4,
       "col": 2,
-      "personal": "Winery visit",
-      "id": 170
+      "personal": "Winery visit"
     },
     {
+      "id": 171,
       "addedAt": "2026-04-12T21:46:02.692Z",
       "synced": false,
       "name": "Fifty Tons",
@@ -916,10 +899,10 @@
       "rack": 2,
       "row": 6,
       "col": 2,
-      "personal": "Winery Visit",
-      "id": 171
+      "personal": "Winery Visit"
     },
     {
+      "id": 172,
       "addedAt": "2026-04-12T21:47:18.448Z",
       "synced": false,
       "name": "My Sister Charlie",
@@ -934,10 +917,10 @@
       "rack": 2,
       "row": 3,
       "col": 4,
-      "personal": "Winery visit",
-      "id": 172
+      "personal": "Winery visit"
     },
     {
+      "id": 173,
       "addedAt": "2026-05-28T03:45:53.392Z",
       "synced": false,
       "name": "Fort Ross-Seaview Pinot Noir",
@@ -952,10 +935,10 @@
       "priceTier": "$$$",
       "rack": 1,
       "row": 2,
-      "col": 4,
-      "id": 173
+      "col": 4
     },
     {
+      "id": 174,
       "addedAt": "2026-02-28",
       "synced": false,
       "name": "Soter Pinot",
@@ -968,10 +951,10 @@
       "purchasePrice": 45,
       "marketValue": 45,
       "quantity": 1,
-      "priceTier": "$$",
-      "id": 174
+      "priceTier": "$$"
     },
     {
+      "id": 175,
       "addedAt": "2026-04-11",
       "synced": false,
       "name": "Sonoma Coast Chardonnay",
@@ -984,10 +967,10 @@
       "purchasePrice": 55,
       "marketValue": 55,
       "quantity": 1,
-      "priceTier": "$$$",
-      "id": 175
+      "priceTier": "$$$"
     },
     {
+      "id": 176,
       "addedAt": "2026-04-12T20:28:16.462Z",
       "synced": false,
       "name": "Soter Estates Pinot Noir",
@@ -999,10 +982,10 @@
       "country": "USA",
       "purchasePrice": 60,
       "quantity": 2,
-      "priceTier": "$$$",
-      "id": 176
+      "priceTier": "$$$"
     },
     {
+      "id": 177,
       "addedAt": "2026-05-28T03:45:53.392Z",
       "synced": false,
       "name": "Fort Ross-Seaview Pinot Noir",
@@ -1014,10 +997,10 @@
       "country": "United States",
       "purchasePrice": 75,
       "quantity": 4,
-      "priceTier": "$$$",
-      "id": 177
+      "priceTier": "$$$"
     },
     {
+      "id": 178,
       "addedAt": "2026-06-07T02:16:44.994Z",
       "synced": false,
       "name": "Ribbon Ridge",
@@ -1030,10 +1013,10 @@
       "purchasePrice": 75,
       "quantity": 3,
       "priceTier": "$$$",
-      "id": 178,
       "personal": null
     },
     {
+      "id": 179,
       "addedAt": "2026-06-07T02:18:12.406Z",
       "synced": false,
       "name": "Savannah Ridge",
@@ -1046,10 +1029,10 @@
       "purchasePrice": 75,
       "quantity": 4,
       "priceTier": "$$$",
-      "id": 179,
       "personal": null
     },
     {
+      "id": 180,
       "addedAt": "2026-06-07T02:19:15.709Z",
       "synced": false,
       "name": "Dundee Hills",
@@ -1062,12 +1045,12 @@
       "purchasePrice": 75,
       "quantity": 2,
       "priceTier": "$$$",
-      "id": 180,
       "rack": 1,
       "row": 1,
       "col": 2
     },
     {
+      "id": 181,
       "addedAt": "2026-06-07T02:20:37.383Z",
       "synced": false,
       "name": "Mineral Springs",
@@ -1080,10 +1063,10 @@
       "purchasePrice": 100,
       "quantity": 2,
       "priceTier": "$$$$",
-      "id": 181,
       "personal": null
     },
     {
+      "id": 182,
       "addedAt": "2026-04-27T03:20:04.857Z",
       "synced": false,
       "name": "A Coroa Godell",
@@ -1094,12 +1077,12 @@
       "region": "Italy",
       "country": "Italy",
       "priceTier": "$",
-      "id": 182,
       "rack": 1,
       "row": 1,
       "col": 3
     },
     {
+      "id": 183,
       "addedAt": "2026-06-07T02:27:24.553Z",
       "synced": false,
       "name": "Dundee Hills",
@@ -1111,12 +1094,12 @@
       "critic": "Score",
       "drinkBy": "Critic",
       "priceTier": "$$$",
-      "id": 183,
       "vintage": 2024,
       "purchasePrice": 75,
       "personal": null
     },
     {
+      "id": 184,
       "addedAt": "2026-06-07T02:27:24.553Z",
       "synced": false,
       "name": "TXAK OLINA",
@@ -1125,10 +1108,10 @@
       "type": "white",
       "country": "Spain",
       "score": 2026,
-      "rack": 2026,
-      "id": 184
+      "rack": 2026
     },
     {
+      "id": 185,
       "addedAt": "2026-06-07T02:27:24.553Z",
       "synced": false,
       "name": "Le Ciel Serein",
@@ -1138,10 +1121,10 @@
       "varietal": "Pinot Noir",
       "country": "USA",
       "score": 2026,
-      "rack": 2026,
-      "id": 185
+      "rack": 2026
     },
     {
+      "id": 186,
       "addedAt": "2026-06-07T02:27:24.554Z",
       "synced": false,
       "name": "Table Red",
@@ -1153,10 +1136,10 @@
       "country": "Italy",
       "score": 2026,
       "priceTier": "Salmon Sunday",
-      "rack": 2026,
-      "id": 186
+      "rack": 2026
     },
     {
+      "id": 187,
       "addedAt": "2026-06-07T02:27:24.554Z",
       "synced": false,
       "name": "Domino de las Abejas",
@@ -1167,10 +1150,10 @@
       "region": "Baja California",
       "country": "Mexico",
       "score": 2026,
-      "rack": 2026,
-      "id": 187
+      "rack": 2026
     },
     {
+      "id": 188,
       "addedAt": "2026-06-07T02:27:24.554Z",
       "synced": false,
       "name": "Soter Estates Pinot Noir",
@@ -1183,10 +1166,10 @@
       "purchasePrice": 60,
       "score": 2026,
       "priceTier": "Fantastic vintage",
-      "rack": 2026,
-      "id": 188
+      "rack": 2026
     },
     {
+      "id": 189,
       "addedAt": "2026-06-07T02:27:24.554Z",
       "synced": false,
       "name": "Brave & Maiden Estate",
@@ -1197,10 +1180,10 @@
       "region": "Santa Ynez Valley (CA)",
       "country": "USA",
       "score": 2026,
-      "rack": 2026,
-      "id": 189
+      "rack": 2026
     },
     {
+      "id": 190,
       "addedAt": "2026-06-07T02:27:24.555Z",
       "synced": false,
       "name": "Lemelson White",
@@ -1212,10 +1195,10 @@
       "country": "USA",
       "score": 2026,
       "priceTier": "Had Chris and Andy over for drinks",
-      "rack": 2026,
-      "id": 190
+      "rack": 2026
     },
     {
+      "id": 191,
       "addedAt": "2026-06-07T02:27:24.555Z",
       "synced": false,
       "name": "A Coroa Godell",
@@ -1226,10 +1209,10 @@
       "region": "Italy",
       "country": "Italy",
       "score": 2026,
-      "rack": 2026,
-      "id": 191
+      "rack": 2026
     },
     {
+      "id": 192,
       "addedAt": "2026-06-07T02:27:24.555Z",
       "synced": false,
       "name": "Leuconoe The Source",
@@ -1240,10 +1223,10 @@
       "region": "Italy",
       "country": "Italy",
       "score": 2026,
-      "rack": 2026,
-      "id": 192
+      "rack": 2026
     },
     {
+      "id": 193,
       "addedAt": "2026-06-07T02:27:24.556Z",
       "synced": false,
       "name": "Soter Mineral Springs Pinot Noir",
@@ -1255,10 +1238,10 @@
       "country": "USA",
       "purchasePrice": 120,
       "score": 2026,
-      "rack": 2026,
-      "id": 193
+      "rack": 2026
     },
     {
+      "id": 194,
       "addedAt": "2026-06-07T02:27:24.556Z",
       "synced": false,
       "name": "Casale del Giglio Bellone Lazio",
@@ -1267,10 +1250,10 @@
       "type": "white",
       "varietal": "Bellone",
       "score": 2026,
-      "rack": 2026,
-      "id": 194
+      "rack": 2026
     },
     {
+      "id": 195,
       "addedAt": "2026-06-07T02:27:24.556Z",
       "synced": false,
       "name": "Fort Ross-Seaview Pinot Noir",
@@ -1282,10 +1265,10 @@
       "country": "United States",
       "purchasePrice": 75,
       "score": 2026,
-      "rack": 2026,
-      "id": 195
+      "rack": 2026
     },
     {
+      "id": 196,
       "addedAt": "2026-06-07T02:27:24.556Z",
       "synced": false,
       "name": "Ribbon Ridge",
@@ -1297,10 +1280,10 @@
       "country": "USA",
       "purchasePrice": 75,
       "score": 2026,
-      "rack": 2026,
-      "id": 196
+      "rack": 2026
     },
     {
+      "id": 197,
       "addedAt": "2026-06-07T02:27:24.557Z",
       "synced": false,
       "name": "Pungirosa",
@@ -1311,10 +1294,10 @@
       "region": "Castel del Monte",
       "country": "Italy",
       "score": 2026,
-      "rack": 2026,
-      "id": 197
+      "rack": 2026
     },
     {
+      "id": 198,
       "addedAt": "2026-06-07T02:28:40.608Z",
       "synced": false,
       "name": "Mineral Springs",
@@ -1330,10 +1313,10 @@
       "personal": null,
       "rack": null,
       "row": null,
-      "col": null,
-      "id": 198
+      "col": null
     },
     {
+      "id": 199,
       "addedAt": "2026-06-07T02:28:52.228Z",
       "synced": false,
       "name": "Savannah Ridge",
@@ -1349,10 +1332,10 @@
       "personal": null,
       "rack": null,
       "row": null,
-      "col": null,
-      "id": 199
+      "col": null
     },
     {
+      "id": 200,
       "addedAt": "2026-06-07T02:28:52.230Z",
       "synced": false,
       "name": "Savannah Ridge",
@@ -1368,10 +1351,10 @@
       "personal": null,
       "rack": null,
       "row": null,
-      "col": null,
-      "id": 200
+      "col": null
     },
     {
+      "id": 201,
       "addedAt": "2026-06-07T02:28:52.230Z",
       "synced": false,
       "name": "Savannah Ridge",
@@ -1387,10 +1370,10 @@
       "personal": null,
       "rack": null,
       "row": null,
-      "col": null,
-      "id": 201
+      "col": null
     },
     {
+      "id": 202,
       "addedAt": "2026-06-07T02:29:01.981Z",
       "synced": false,
       "name": "Ribbon Ridge",
@@ -1406,10 +1389,10 @@
       "personal": null,
       "rack": null,
       "row": null,
-      "col": null,
-      "id": 202
+      "col": null
     },
     {
+      "id": 203,
       "addedAt": "2026-06-07T02:29:01.982Z",
       "synced": false,
       "name": "Ribbon Ridge",
@@ -1425,10 +1408,10 @@
       "personal": null,
       "rack": null,
       "row": null,
-      "col": null,
-      "id": 203
+      "col": null
     },
     {
+      "id": 204,
       "addedAt": "2026-06-07T02:31:41.885Z",
       "synced": false,
       "name": "Dundee Hills",
@@ -1445,10 +1428,10 @@
       "personal": null,
       "rack": null,
       "row": null,
-      "col": null,
-      "id": 204
+      "col": null
     },
     {
+      "id": 205,
       "addedAt": "2026-06-07T02:31:41.886Z",
       "synced": false,
       "name": "Dundee Hills",
@@ -1465,8 +1448,7 @@
       "personal": null,
       "rack": null,
       "row": null,
-      "col": null,
-      "id": 205
+      "col": null
     }
   ],
   "departed": [
@@ -1677,6 +1659,7 @@
       "addedAt": "2026-05-28T03:45:53.392Z"
     },
     {
+      "id": 13,
       "name": "Ribbon Ridge",
       "producer": "Soter Vineyards",
       "vintage": 2024,
@@ -1691,10 +1674,10 @@
       "score": null,
       "critic": "",
       "notes": "",
-      "addedAt": "2026-06-07T02:16:44.994Z",
-      "id": 13
+      "addedAt": "2026-06-07T02:16:44.994Z"
     },
     {
+      "id": 14,
       "name": "Pungirosa",
       "producer": "CASTEL DEL MONTE",
       "vintage": 2024,
@@ -1708,8 +1691,25 @@
       "score": null,
       "critic": "",
       "notes": "",
-      "addedAt": "2026-03-01T01:05:47.964Z",
-      "id": 14
+      "addedAt": "2026-03-01T01:05:47.964Z"
+    },
+    {
+      "name": "Soter Estates Pinot Noir",
+      "producer": "Soter Vineyards",
+      "vintage": 2024,
+      "type": "red",
+      "varietal": "Pinot Noir",
+      "region": "Oregon",
+      "country": "USA",
+      "purchasePrice": 60,
+      "priceTier": "$$$",
+      "reason": "Consumed",
+      "departedAt": "2026-06-23",
+      "score": null,
+      "critic": "",
+      "notes": "",
+      "addedAt": "2026-04-12T20:43:48.359Z",
+      "id": 15
     }
   ]
 }

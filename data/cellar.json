@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "exportedAt": "2026-06-23T01:58:37.957Z",
+  "exportedAt": "2026-06-23T01:59:12.292Z",
   "racks": [
     {
       "id": 1,
@@ -1066,22 +1066,6 @@
       "personal": null
     },
     {
-      "id": 182,
-      "addedAt": "2026-04-27T03:20:04.857Z",
-      "synced": false,
-      "name": "A Coroa Godell",
-      "producer": "A Corra",
-      "vintage": 2024,
-      "type": "white",
-      "varietal": "Godello",
-      "region": "Italy",
-      "country": "Italy",
-      "priceTier": "$",
-      "rack": 1,
-      "row": 1,
-      "col": 3
-    },
-    {
       "id": 183,
       "addedAt": "2026-06-07T02:27:24.553Z",
       "synced": false,
@@ -1710,6 +1694,23 @@
       "notes": "",
       "addedAt": "2026-04-12T20:43:48.359Z",
       "id": 15
+    },
+    {
+      "name": "A Coroa Godell",
+      "producer": "A Corra",
+      "vintage": 2024,
+      "type": "white",
+      "varietal": "Godello",
+      "region": "Italy",
+      "country": "Italy",
+      "priceTier": "$",
+      "reason": "Consumed",
+      "departedAt": "2026-06-23",
+      "score": null,
+      "critic": "",
+      "notes": "",
+      "addedAt": "2026-04-27T03:20:04.857Z",
+      "id": 16
     }
   ]
 }

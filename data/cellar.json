@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "exportedAt": "2026-07-19T23:39:53.648Z",
+  "exportedAt": "2026-07-19T23:39:59.612Z",
   "racks": [
     {
       "id": 1,
@@ -270,23 +270,6 @@
       "rack": null,
       "row": null,
       "col": null
-    },
-    {
-      "id": 137,
-      "addedAt": "2026-04-11",
-      "synced": false,
-      "name": "Campanelli",
-      "producer": "Palombare",
-      "vintage": 2022,
-      "type": "white",
-      "varietal": "White",
-      "region": "Italy",
-      "country": "Italy",
-      "quantity": 1,
-      "priceTier": "$",
-      "rack": 1,
-      "row": 1,
-      "col": 4
     },
     {
       "id": 138,
@@ -1713,6 +1696,23 @@
       "notes": "",
       "addedAt": "2026-02-28",
       "id": 22
+    },
+    {
+      "name": "Campanelli",
+      "producer": "Palombare",
+      "vintage": 2022,
+      "type": "white",
+      "varietal": "White",
+      "region": "Italy",
+      "country": "Italy",
+      "priceTier": "$",
+      "reason": "Consumed",
+      "departedAt": "2026-07-19",
+      "score": null,
+      "critic": "",
+      "notes": "",
+      "addedAt": "2026-04-11",
+      "id": 23
     }
   ]
 }

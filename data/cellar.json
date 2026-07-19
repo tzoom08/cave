@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "exportedAt": "2026-07-19T23:41:07.157Z",
+  "exportedAt": "2026-07-19T23:41:38.692Z",
   "racks": [
     {
       "id": 1,
@@ -969,7 +969,10 @@
       "purchasePrice": 75,
       "quantity": 3,
       "priceTier": "$$$",
-      "personal": null
+      "personal": null,
+      "rack": 1,
+      "row": 1,
+      "col": 4
     },
     {
       "id": 179,
@@ -1309,9 +1312,9 @@
       "quantity": 3,
       "priceTier": "$$$",
       "personal": null,
-      "rack": null,
-      "row": null,
-      "col": null
+      "rack": 1,
+      "row": 1,
+      "col": 1
     },
     {
       "id": 203,
@@ -1328,9 +1331,9 @@
       "quantity": 3,
       "priceTier": "$$$",
       "personal": null,
-      "rack": null,
-      "row": null,
-      "col": null
+      "rack": 1,
+      "row": 1,
+      "col": 3
     },
     {
       "id": 204,

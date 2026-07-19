@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "exportedAt": "2026-07-19T23:39:59.612Z",
+  "exportedAt": "2026-07-19T23:40:36.176Z",
   "racks": [
     {
       "id": 1,
@@ -166,23 +166,6 @@
       "rack": 2,
       "row": 3,
       "col": 3
-    },
-    {
-      "id": 130,
-      "addedAt": "2026-02-28",
-      "synced": false,
-      "name": "Works & Days Pinot",
-      "producer": "Works & Days",
-      "vintage": 2018,
-      "type": "red",
-      "varietal": "Pinot Noir",
-      "region": "Sonoma Coast",
-      "country": "USA",
-      "quantity": 1,
-      "priceTier": "$",
-      "rack": 1,
-      "row": 1,
-      "col": 1
     },
     {
       "id": 131,
@@ -1713,6 +1696,23 @@
       "notes": "",
       "addedAt": "2026-04-11",
       "id": 23
+    },
+    {
+      "name": "Works & Days Pinot",
+      "producer": "Works & Days",
+      "vintage": 2018,
+      "type": "red",
+      "varietal": "Pinot Noir",
+      "region": "Sonoma Coast",
+      "country": "USA",
+      "priceTier": "$",
+      "reason": "Consumed",
+      "departedAt": "2026-07-19",
+      "score": null,
+      "critic": "",
+      "notes": "",
+      "addedAt": "2026-02-28",
+      "id": 24
     }
   ]
 }

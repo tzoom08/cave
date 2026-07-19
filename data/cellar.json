@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "exportedAt": "2026-06-23T01:59:35.214Z",
+  "exportedAt": "2026-07-19T23:39:53.648Z",
   "racks": [
     {
       "id": 1,
@@ -202,25 +202,6 @@
       "col": 2
     },
     {
-      "id": 132,
-      "addedAt": "2026-02-28",
-      "synced": false,
-      "name": "Soter Origin Pinot",
-      "producer": "Soter Vineyards",
-      "vintage": 2024,
-      "type": "red",
-      "varietal": "Pinot Noir",
-      "region": "Oregon",
-      "country": "USA",
-      "purchasePrice": 50,
-      "marketValue": 50,
-      "quantity": 1,
-      "priceTier": "$$$",
-      "rack": 2,
-      "row": 4,
-      "col": 3
-    },
-    {
       "id": 133,
       "addedAt": "2026-02-28",
       "synced": false,
@@ -286,9 +267,9 @@
       "country": "Italy",
       "quantity": 1,
       "priceTier": "$",
-      "rack": 2,
-      "row": 5,
-      "col": 3
+      "rack": null,
+      "row": null,
+      "col": null
     },
     {
       "id": 137,
@@ -303,8 +284,8 @@
       "country": "Italy",
       "quantity": 1,
       "priceTier": "$",
-      "rack": 2,
-      "row": 5,
+      "rack": 1,
+      "row": 1,
       "col": 4
     },
     {
@@ -997,7 +978,10 @@
       "country": "United States",
       "purchasePrice": 75,
       "quantity": 4,
-      "priceTier": "$$$"
+      "priceTier": "$$$",
+      "rack": 2,
+      "row": 4,
+      "col": 1
     },
     {
       "id": 178,
@@ -1296,9 +1280,9 @@
       "quantity": 4,
       "priceTier": "$$$",
       "personal": null,
-      "rack": null,
-      "row": null,
-      "col": null
+      "rack": 2,
+      "row": 5,
+      "col": 3
     },
     {
       "id": 200,
@@ -1315,9 +1299,9 @@
       "quantity": 4,
       "priceTier": "$$$",
       "personal": null,
-      "rack": null,
-      "row": null,
-      "col": null
+      "rack": 2,
+      "row": 5,
+      "col": 4
     },
     {
       "id": 201,
@@ -1334,9 +1318,9 @@
       "quantity": 4,
       "priceTier": "$$$",
       "personal": null,
-      "rack": null,
-      "row": null,
-      "col": null
+      "rack": 2,
+      "row": 4,
+      "col": 3
     },
     {
       "id": 202,
@@ -1660,6 +1644,7 @@
       "addedAt": "2026-03-01T01:05:47.964Z"
     },
     {
+      "id": 15,
       "name": "Soter Estates Pinot Noir",
       "producer": "Soter Vineyards",
       "vintage": 2024,
@@ -1674,10 +1659,10 @@
       "score": null,
       "critic": "",
       "notes": "",
-      "addedAt": "2026-04-12T20:43:48.359Z",
-      "id": 15
+      "addedAt": "2026-04-12T20:43:48.359Z"
     },
     {
+      "id": 16,
       "name": "A Coroa Godell",
       "producer": "A Corra",
       "vintage": 2024,
@@ -1691,10 +1676,10 @@
       "score": null,
       "critic": "",
       "notes": "",
-      "addedAt": "2026-04-27T03:20:04.857Z",
-      "id": 16
+      "addedAt": "2026-04-27T03:20:04.857Z"
     },
     {
+      "id": 17,
       "name": "Dundee Hills",
       "producer": "Soter Vineyards",
       "vintage": 2024,
@@ -1709,8 +1694,25 @@
       "score": null,
       "critic": "",
       "notes": "",
-      "addedAt": "2026-06-07T02:19:15.709Z",
-      "id": 17
+      "addedAt": "2026-06-07T02:19:15.709Z"
+    },
+    {
+      "name": "Soter Origin Pinot",
+      "producer": "Soter Vineyards",
+      "vintage": 2024,
+      "type": "red",
+      "varietal": "Pinot Noir",
+      "region": "Oregon",
+      "country": "USA",
+      "purchasePrice": 50,
+      "priceTier": "$$$",
+      "reason": "Consumed",
+      "departedAt": "2026-07-19",
+      "score": null,
+      "critic": "",
+      "notes": "",
+      "addedAt": "2026-02-28",
+      "id": 22
     }
   ]
 }

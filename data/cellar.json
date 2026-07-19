@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "exportedAt": "2026-07-19T23:41:38.692Z",
+  "exportedAt": "2026-07-19T23:41:42.918Z",
   "racks": [
     {
       "id": 1,
@@ -970,9 +970,9 @@
       "quantity": 3,
       "priceTier": "$$$",
       "personal": null,
-      "rack": 1,
-      "row": 1,
-      "col": 4
+      "rack": null,
+      "row": null,
+      "col": null
     },
     {
       "id": 179,

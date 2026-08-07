@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "exportedAt": "2026-08-07T23:16:44.267Z",
+  "exportedAt": "2026-08-07T23:17:52.222Z",
   "racks": [
     {
       "id": 1,
@@ -1392,6 +1392,24 @@
       "synced": false,
       "addedAt": "2026-08-07T23:16:44.207Z",
       "id": 207
+    },
+    {
+      "name": "Langhe",
+      "producer": "Damilano",
+      "vintage": 2024,
+      "type": "white",
+      "priceTier": "$",
+      "purchasePrice": 25,
+      "varietal": "Langhe",
+      "region": "Arnies",
+      "country": "Italy",
+      "personal": null,
+      "rack": null,
+      "row": null,
+      "col": null,
+      "synced": false,
+      "addedAt": "2026-08-07T23:17:52.168Z",
+      "id": 208
     }
   ],
   "departed": [

@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "exportedAt": "2026-07-19T23:41:56.626Z",
+  "exportedAt": "2026-08-07T23:16:44.267Z",
   "racks": [
     {
       "id": 1,
@@ -1374,6 +1374,24 @@
       "rack": null,
       "row": null,
       "col": null
+    },
+    {
+      "name": "Happy Canyon Malvasia Bianca",
+      "producer": "Voon",
+      "vintage": 2025,
+      "type": "white",
+      "priceTier": "$",
+      "purchasePrice": 25,
+      "varietal": null,
+      "region": "Santa Barbara",
+      "country": "USA",
+      "personal": null,
+      "rack": null,
+      "row": null,
+      "col": null,
+      "synced": false,
+      "addedAt": "2026-08-07T23:16:44.207Z",
+      "id": 207
     }
   ],
   "departed": [
@@ -1672,6 +1690,7 @@
       "addedAt": "2026-06-07T02:19:15.709Z"
     },
     {
+      "id": 22,
       "name": "Soter Origin Pinot",
       "producer": "Soter Vineyards",
       "vintage": 2024,
@@ -1686,10 +1705,10 @@
       "score": null,
       "critic": "",
       "notes": "",
-      "addedAt": "2026-02-28",
-      "id": 22
+      "addedAt": "2026-02-28"
     },
     {
+      "id": 23,
       "name": "Campanelli",
       "producer": "Palombare",
       "vintage": 2022,
@@ -1703,10 +1722,10 @@
       "score": null,
       "critic": "",
       "notes": "",
-      "addedAt": "2026-04-11",
-      "id": 23
+      "addedAt": "2026-04-11"
     },
     {
+      "id": 24,
       "name": "Works & Days Pinot",
       "producer": "Works & Days",
       "vintage": 2018,
@@ -1720,8 +1739,7 @@
       "score": null,
       "critic": "",
       "notes": "",
-      "addedAt": "2026-02-28",
-      "id": 24
+      "addedAt": "2026-02-28"
     }
   ]
 }

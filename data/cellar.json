@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "exportedAt": "2026-08-07T23:17:52.222Z",
+  "exportedAt": "2026-08-07T23:19:22.178Z",
   "racks": [
     {
       "id": 1,
@@ -1410,6 +1410,24 @@
       "synced": false,
       "addedAt": "2026-08-07T23:17:52.168Z",
       "id": 208
+    },
+    {
+      "name": "Petit Chablis",
+      "producer": "Famille Ventoura",
+      "vintage": 2024,
+      "type": "white",
+      "priceTier": "$",
+      "purchasePrice": 25,
+      "varietal": "Petit Chablis",
+      "region": "France",
+      "country": "France",
+      "personal": null,
+      "rack": null,
+      "row": null,
+      "col": null,
+      "synced": false,
+      "addedAt": "2026-08-07T23:19:22.124Z",
+      "id": 209
     }
   ],
   "departed": [

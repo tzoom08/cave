@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "exportedAt": "2026-08-07T23:19:22.178Z",
+  "exportedAt": "2026-08-07T23:23:50.193Z",
   "racks": [
     {
       "id": 1,
@@ -1428,6 +1428,24 @@
       "synced": false,
       "addedAt": "2026-08-07T23:19:22.124Z",
       "id": 209
+    },
+    {
+      "name": "Fiano Di Avellino",
+      "producer": "Tenuta Del Meriggio",
+      "vintage": 2024,
+      "type": "white",
+      "priceTier": "$",
+      "purchasePrice": 25,
+      "varietal": "Fiano Di Avellino",
+      "region": "Italy",
+      "country": "Italy",
+      "personal": null,
+      "rack": null,
+      "row": null,
+      "col": null,
+      "synced": false,
+      "addedAt": "2026-08-07T23:23:50.136Z",
+      "id": 210
     }
   ],
   "departed": [

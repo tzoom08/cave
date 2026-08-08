@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "exportedAt": "2026-08-07T23:23:50.193Z",
+  "exportedAt": "2026-08-08T18:50:20.140Z",
   "racks": [
     {
       "id": 1,
@@ -1376,6 +1376,7 @@
       "col": null
     },
     {
+      "id": 207,
       "name": "Happy Canyon Malvasia Bianca",
       "producer": "Voon",
       "vintage": 2025,
@@ -1386,14 +1387,14 @@
       "region": "Santa Barbara",
       "country": "USA",
       "personal": null,
-      "rack": null,
-      "row": null,
-      "col": null,
+      "rack": 1,
+      "row": 2,
+      "col": 4,
       "synced": false,
-      "addedAt": "2026-08-07T23:16:44.207Z",
-      "id": 207
+      "addedAt": "2026-08-07T23:16:44.207Z"
     },
     {
+      "id": 208,
       "name": "Langhe",
       "producer": "Damilano",
       "vintage": 2024,
@@ -1408,10 +1409,10 @@
       "row": null,
       "col": null,
       "synced": false,
-      "addedAt": "2026-08-07T23:17:52.168Z",
-      "id": 208
+      "addedAt": "2026-08-07T23:17:52.168Z"
     },
     {
+      "id": 209,
       "name": "Petit Chablis",
       "producer": "Famille Ventoura",
       "vintage": 2024,
@@ -1426,10 +1427,10 @@
       "row": null,
       "col": null,
       "synced": false,
-      "addedAt": "2026-08-07T23:19:22.124Z",
-      "id": 209
+      "addedAt": "2026-08-07T23:19:22.124Z"
     },
     {
+      "id": 210,
       "name": "Fiano Di Avellino",
       "producer": "Tenuta Del Meriggio",
       "vintage": 2024,
@@ -1444,8 +1445,7 @@
       "row": null,
       "col": null,
       "synced": false,
-      "addedAt": "2026-08-07T23:23:50.136Z",
-      "id": 210
+      "addedAt": "2026-08-07T23:23:50.136Z"
     }
   ],
   "departed": [

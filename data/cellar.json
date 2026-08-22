@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "exportedAt": "2026-08-08T18:51:55.267Z",
+  "exportedAt": "2026-08-22T22:30:14.404Z",
   "racks": [
     {
       "id": 1,
@@ -558,23 +558,6 @@
       "rack": 3,
       "row": 4,
       "col": 4
-    },
-    {
-      "id": 155,
-      "addedAt": "2026-04-11",
-      "synced": false,
-      "name": "Pine Mountain Estate Reserve",
-      "producer": "Pine Mountain Vineyards",
-      "vintage": 2019,
-      "type": "red",
-      "varietal": "Cabernet Sauvignon",
-      "region": "Cloverdale Peak (CA)",
-      "country": "USA",
-      "quantity": 1,
-      "priceTier": "$$",
-      "rack": 3,
-      "row": 5,
-      "col": 1
     },
     {
       "id": 156,
@@ -1793,6 +1776,23 @@
       "notes": "",
       "addedAt": "2026-06-07T02:29:01.982Z",
       "id": 25
+    },
+    {
+      "name": "Pine Mountain Estate Reserve",
+      "producer": "Pine Mountain Vineyards",
+      "vintage": 2019,
+      "type": "red",
+      "varietal": "Cabernet Sauvignon",
+      "region": "Cloverdale Peak (CA)",
+      "country": "USA",
+      "priceTier": "$$",
+      "reason": "Consumed",
+      "departedAt": "2026-08-22",
+      "score": null,
+      "critic": "",
+      "notes": "Taken to Phillip DuPree’s party",
+      "addedAt": "2026-04-11",
+      "id": 26
     }
   ]
 }

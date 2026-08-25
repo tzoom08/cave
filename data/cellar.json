@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "exportedAt": "2026-08-22T22:30:14.404Z",
+  "exportedAt": "2026-08-25T13:34:49.858Z",
   "racks": [
     {
       "id": 1,
@@ -1410,6 +1410,24 @@
       "col": 3,
       "synced": false,
       "addedAt": "2026-08-07T23:23:50.136Z"
+    },
+    {
+      "name": "Bianca di Morgante",
+      "producer": "Morgante",
+      "vintage": 2024,
+      "type": "white",
+      "priceTier": "$",
+      "purchasePrice": 25,
+      "varietal": "Bianco",
+      "region": "Italy",
+      "country": "Italy",
+      "personal": null,
+      "rack": null,
+      "row": null,
+      "col": null,
+      "synced": false,
+      "addedAt": "2026-08-25T13:34:49.802Z",
+      "id": 211
     }
   ],
   "departed": [
@@ -1760,6 +1778,7 @@
       "addedAt": "2026-02-28"
     },
     {
+      "id": 25,
       "name": "Ribbon Ridge",
       "producer": "Soter Vineyards",
       "vintage": 2024,
@@ -1774,10 +1793,10 @@
       "score": null,
       "critic": "",
       "notes": "",
-      "addedAt": "2026-06-07T02:29:01.982Z",
-      "id": 25
+      "addedAt": "2026-06-07T02:29:01.982Z"
     },
     {
+      "id": 26,
       "name": "Pine Mountain Estate Reserve",
       "producer": "Pine Mountain Vineyards",
       "vintage": 2019,
@@ -1791,8 +1810,7 @@
       "score": null,
       "critic": "",
       "notes": "Taken to Phillip DuPree’s party",
-      "addedAt": "2026-04-11",
-      "id": 26
+      "addedAt": "2026-04-11"
     }
   ]
 }

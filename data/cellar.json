@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "exportedAt": "2026-08-25T13:35:16.998Z",
+  "exportedAt": "2026-08-25T13:35:24.692Z",
   "racks": [
     {
       "id": 1,
@@ -1403,9 +1403,9 @@
       "region": "Italy",
       "country": "Italy",
       "personal": null,
-      "rack": null,
-      "row": null,
-      "col": null,
+      "rack": 1,
+      "row": 1,
+      "col": 1,
       "synced": false,
       "addedAt": "2026-08-25T13:34:49.802Z",
       "id": 211
